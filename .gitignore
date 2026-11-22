@@ -27,3 +27,4 @@ blob-report/
 .idea/
 .vscode/
 *.log
+.lighthouseci/

@@ -1,0 +1,31 @@
+name: Uptime
+
+# Pings the live app every 30 minutes (acceptance #16 support). A failed run means the
+# Worker or D1 is down; GitHub notifies the repo's watchers. Free on public repos.
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: GET /api/health
+        run: |
+          set -euo pipefail
+          url="https://wreathlight.worxnation.workers.dev/api/health"
+          for i in 1 2 3; do
+            body=$(curl -fsS --max-time 15 "$url") && echo "$body" | grep -q '"ok":true' && { echo "up: $body"; exit 0; }
+            echo "attempt $i failed"; sleep 20
+          done
+          echo "::error::Wreathlight health check failed 3 times"; exit 1
+      - name: Family page and demo API answer
+        run: |
+          set -euo pipefail
+          curl -fsS --max-time 15 -o /dev/null https://wreathlight.worxnation.workers.dev/j/HOPE25
+          curl -fsS --max-time 15 https://wreathlight.worxnation.workers.dev/api/public/HOPE25 | grep -q '"code":"HOPE25"'
