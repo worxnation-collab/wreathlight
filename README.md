@@ -65,6 +65,12 @@ Every push to `main` runs CI (typecheck, lint, unit tests, guard, Playwright aga
 Worker secrets (`SESSION_SECRET`, `GEMINI_API_KEY`) are set once with `wrangler secret put` and never stored in the repo.
 `GEMINI_MODEL` / `GEMINI_FALLBACK_MODEL` live in `wrangler.toml` (checked with ListModels).
 
+### Monitoring and quality gates
+
+- `.github/workflows/uptime.yml` pings `/api/health`, `/j/HOPE25` and the demo API every 30 minutes; a red run means the live app is down.
+- CI runs Lighthouse (`lighthouserc.json`, mobile, median of 3) on `/j/HOPE25` and `/c/HOPE25/wreath` and fails below 90 for performance, accessibility or best practices.
+- `npx tsx scripts/check-verses.ts --remote` (read-only) checks every approved night in D1 against the Bible dataset, character for character.
+
 ## Demo church
 
 "Hope Creek Community Church (demo)" in Lakeside is fictional. Its data is synthetic and resets hourly. Code `HOPE25`.

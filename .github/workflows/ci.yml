@@ -71,6 +71,31 @@ jobs:
             test-results/
           retention-days: 3
 
+  lighthouse:
+    name: lighthouse (mobile >= 90 on family + wreath)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Local dev vars (mock AI; no real secrets)
+        run: cp .dev.vars.example .dev.vars
+      - run: npm run build:client
+      - run: npx wrangler d1 migrations apply wreathlight-db --local
+      - run: npx tsx scripts/seed-demo.ts --local
+      - name: Lighthouse CI (acceptance #14; config in lighthouserc.json)
+        run: npx --yes @lhci/cli@0.15.1 autorun
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 7
+
   deploy:
     name: deploy (Cloudflare Workers + D1, free plan)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

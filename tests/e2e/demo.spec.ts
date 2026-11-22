@@ -88,6 +88,20 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   await fam.getByRole("button", { name: "Cambiar a español" }).click();
   await expect(fam.getByText(/Noche 27 · .* · Navidad\b/)).toBeVisible();
   await ctx.close();
+
+  // Dec 24 card shows the church's Christmas Eve service times (EN + ES).
+  const n26 = d.nights.find((n: { night: number }) => n.night === 26);
+  expect((await page.request.post(`/api/nights/${n26.id}/approve`, { data: { include_es: true } })).ok()).toBe(true);
+  const eve = await browser.newContext({ viewport: { width: 360, height: 780 }, extraHTTPHeaders: { "x-test-now": "2026-12-24T19:00:00-05:00" } });
+  const ep = await eve.newPage();
+  await ep.goto("/j/HOPE25");
+  await ep.getByRole("button", { name: "Join" }).click();
+  for (const step of ["Next: Talk", "Next: Pray", "Next: Do"]) await ep.getByRole("button", { name: step }).click();
+  await expect(ep.getByText("Christmas Eve at church")).toBeVisible();
+  await expect(ep.getByText(/9:00 PM candlelight/)).toBeVisible();
+  await ep.getByRole("button", { name: "Cambiar a español" }).click();
+  await expect(ep.getByText("Nochebuena en la iglesia")).toBeVisible();
+  await eve.close();
 });
 
 test("a Spanish-language phone opens the family view in Spanish", async ({ browser }) => {
