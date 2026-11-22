@@ -1,3 +1,4 @@
+import type { ModelNight } from "../shared/schemas";
 const enc = new TextEncoder();
 
 export function uuid(): string {
@@ -43,4 +44,11 @@ export function stableJson(v: unknown): string {
   if (v && typeof v === "object")
     return "{" + Object.keys(v as object).sort().map((k) => JSON.stringify(k) + ":" + stableJson((v as any)[k])).join(",") + "}";
   return JSON.stringify(v ?? null);
+}
+
+const proseKey = (p?: { why?: string; talk?: { little?: string; kids?: string; grownups?: string }; pray?: string; do?: string } | null) =>
+  p ? JSON.stringify([p.why ?? "", p.talk?.little ?? "", p.talk?.kids ?? "", p.talk?.grownups ?? "", p.pray ?? "", p.do ?? ""].map((x) => x.trim())) : "";
+/** True when an edit changes nothing a family would see (reference, EN or ES text). */
+export function sameNightContent(a: ModelNight, b: ModelNight): boolean {
+  return a.reference.trim() === b.reference.trim() && proseKey(a) === proseKey(b) && proseKey(a.es) === proseKey(b.es);
 }
