@@ -66,3 +66,19 @@ describe("draft pipeline", () => {
     expect(new Set(keys).size).toBe(27);
   });
 });
+
+describe("draftWeek with nothing to draft", () => {
+  it("makes no model call when every night is already approved", async () => {
+    const { draftWeek } = await import("../../src/worker/draft");
+    let calls = 0;
+    const out = await draftWeek(
+      {
+        ai: { name: "spy", draft: async () => { calls++; return []; } } as never,
+        primaryModel: "p", fallbackModel: "f", canCall: async () => true, onRun: async () => {},
+      },
+      { theme: "light", tradition: "hope", translation: "bsb", spanish: false, week: 1, nights: [], usedRefKeys: new Set(), usedRefs: [] },
+    );
+    expect(out).toEqual([]);
+    expect(calls).toBe(0);
+  });
+});

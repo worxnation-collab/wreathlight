@@ -5,6 +5,8 @@ main = "src/worker/index.ts"
 compatibility_date = "2026-11-19"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
+# Version preview URLs off: no non-production copies of the app are publicly reachable.
+preview_urls = false
 
 [assets]
 directory = "./dist/client"
