@@ -1,19 +1,21 @@
 # Data sources and licenses
 
-Only public-domain Scripture texts are used. Each is downloaded from its original source by `scripts/import-bible.ts`; none are copied from any other project.
+All Scripture text in Wreathlight is public domain. It is downloaded from the original publishers by
+`scripts/import-bible.ts` (run on Nov 22, 2026) and normalized to `{book, chapter, verse, text}`.
+The AI model never writes Scripture; code fills verse text from these files.
 
-| Text | Language | Source URL | License |
+| Id | Translation | Source | License |
 |---|---|---|---|
-| Berean Standard Bible (BSB) | English | _TODO_ (bereanbible.com) | Public domain (dedicated 2023) |
-| King James Version (KJV) | English | _TODO_ (ebible.org) | Public domain |
-| World English Bible (WEB) | English | _TODO_ (ebible.org) | Public domain |
-| Reina-Valera 1909 (RV1909) | Spanish | _TODO_ (ebible.org) | Public domain |
+| bsb | Berean Standard Bible | https://bereanbible.com/bsb.txt | Public domain (dedicated to the public domain, 2023). "This text of God's Word has been dedicated to the public domain." |
+| kjv | King James Version | https://ebible.org/Scriptures/eng-kjv2006_vpl.zip | Public domain (outside the United Kingdom). |
+| web | World English Bible | https://ebible.org/Scriptures/engwebp_vpl.zip | Public domain. "World English Bible" is a trademark of eBible.org. |
+| rv1909 | Reina-Valera 1909 | https://ebible.org/Scriptures/spaRV1909_vpl.zip | Public domain. |
 
-Not used (copyrighted): NIV, ESV, NLT, NKJV, CSB, RVR1960, NVI.
+Normalization: whitespace collapsed and trimmed; KJV square brackets (italic markers for supplied words) removed.
+Nothing else is changed. Verse text ships only for Isaiah, Micah, Malachi, Psalms, Matthew, Luke, John and Galatians
+(`content/bible/<id>.json`); `content/bible/index.json` holds verse counts for all 66 books so any reference can be
+checked for existence.
 
-## Fonts
+Copyrighted translations (NIV, ESV, NLT, NKJV, CSB, RVR1960, NVI) are not included.
 
-| Font | Source | License |
-|---|---|---|
-| Fraunces | _TODO_ | SIL Open Font License 1.1 |
-| Inter | _TODO_ | SIL Open Font License 1.1 |
+Fonts: Fraunces and Inter (SIL Open Font License 1.1), self-hosted via the `@fontsource` npm packages.

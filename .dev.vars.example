@@ -1,4 +1,6 @@
-# Copy to .dev.vars for local `wrangler dev`. Never commit .dev.vars.
-# Production values are set with `wrangler secret put <NAME>`.
-GEMINI_API_KEY=
-SESSION_SECRET=
+# Local only. Copy to .dev.vars (gitignored). Never commit real secrets.
+SESSION_SECRET=local-dev-only-change-me-0123456789abcdef
+# Leave GEMINI_API_KEY unset locally to use the mock drafter.
+# GEMINI_API_KEY=
+AI_MOCK=1
+ALLOW_TEST_CLOCK=1

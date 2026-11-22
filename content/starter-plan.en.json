@@ -1,0 +1,358 @@
+{
+ "theme": "light",
+ "label": "Starter Plan: written with AI help and reviewed by a person.",
+ "status": "draft-pending-review",
+ "nights": [
+  {
+   "night": 1,
+   "date": "2026-11-29",
+   "reference": "Isaiah 9:2",
+   "why": "Advent begins in the dark, and God's first promise is simple: light is coming.",
+   "talk": {
+    "little": "What do you see when all the lights go off?",
+    "kids": "When have you felt like you were waiting in the dark?",
+    "grownups": "Where do you most need light this season?"
+   },
+   "pray": "God of light, thank you that the dark does not win. Help us wait for Jesus with hope. Amen.",
+   "do": "Turn off the lights for one minute and sit together quietly. Then switch on one lamp and say together: light is coming."
+  },
+  {
+   "night": 2,
+   "date": "2026-11-30",
+   "reference": "Isaiah 60:1-3",
+   "why": "God's light is not only for looking at. It shines on us so we can shine too.",
+   "talk": {
+    "little": "Can you stand up tall and shine like the sun?",
+    "kids": "What is one way your face can show God's light to someone tomorrow?",
+    "grownups": "Who has been a light to you, and have you told them?"
+   },
+   "pray": "Jesus, shine on our family so we can shine for others. Amen.",
+   "do": "Stand in a circle and take turns saying one kind thing about the person on your left."
+  },
+  {
+   "night": 3,
+   "date": "2026-12-01",
+   "reference": "Psalm 27:1",
+   "why": "When we feel scared, we can remember who our light is.",
+   "talk": {
+    "little": "What helps you feel safe at night?",
+    "kids": "What is something that makes you afraid, and how could God help?",
+    "grownups": "What fear have you been carrying that you could hand to God tonight?"
+   },
+   "pray": "Lord, you are our light. When we are afraid, help us remember you are near. Amen.",
+   "do": "Make a simple night-light promise: each person says one thing they will remember when they feel afraid."
+  },
+  {
+   "night": 4,
+   "date": "2026-12-02",
+   "reference": "Psalm 119:105",
+   "why": "A lamp shows the next step, not the whole road. God's word helps us take the next step.",
+   "talk": {
+    "little": "Can you take one tiny step and then stop?",
+    "kids": "What is one choice coming up this week where you need help knowing what to do?",
+    "grownups": "What next step is God showing you, even if you can't see the whole road?"
+   },
+   "pray": "God, light up the next step for each of us. Help us follow you one step at a time. Amen.",
+   "do": "With a flashlight, take turns guiding someone across a dim room one step at a time, then switch roles."
+  },
+  {
+   "night": 5,
+   "date": "2026-12-03",
+   "reference": "Micah 7:8",
+   "why": "Even when we fall down or feel sad, God is our light and helps us get back up.",
+   "talk": {
+    "little": "What do you do when you fall down?",
+    "kids": "Tell about a time you made a mistake and got another chance.",
+    "grownups": "Where do you need to hear that falling is not the end of the story?"
+   },
+   "pray": "Lord, when we fall, help us get up again. Thank you that you never leave us in the dark. Amen.",
+   "do": "Play a gentle game: everyone sits on the floor and helps someone else stand up. Talk about who helps you get back up."
+  },
+  {
+   "night": 6,
+   "date": "2026-12-04",
+   "reference": "Psalm 18:28",
+   "why": "God lights up our lamp. We don't have to make our own light.",
+   "talk": {
+    "little": "Who turns on the lights in our house?",
+    "kids": "What is something hard that God could help you with this week?",
+    "grownups": "What are you trying to do in your own strength that God wants to help with?"
+   },
+   "pray": "God, thank you for lighting our lamp. Help us trust you with what feels too hard. Amen.",
+   "do": "A grown-up lights a candle, or use a battery candle. Each person names one hard thing and one way God has helped before."
+  },
+  {
+   "night": 7,
+   "date": "2026-12-05",
+   "reference": "Isaiah 42:6-7",
+   "why": "God's light is meant to reach everyone, especially people who feel left out.",
+   "talk": {
+    "little": "Who could you share a hug with?",
+    "kids": "Who at school or church might feel left out, and how could you include them?",
+    "grownups": "Who in our neighborhood could use some light this month?"
+   },
+   "pray": "God, open our eyes to people who feel alone. Use our family to share your light. Amen.",
+   "do": "Draw or write a short thank-you note for someone who helps your family, and plan together how to give it."
+  },
+  {
+   "night": 8,
+   "date": "2026-12-06",
+   "reference": "Isaiah 9:6-7",
+   "why": "Jesus is called the Prince of Peace. His kind of peace never runs out.",
+   "talk": {
+    "little": "What does it feel like to be calm?",
+    "kids": "Which name for Jesus in this reading do you like most, and why?",
+    "grownups": "Where do you need the peace that only Jesus gives?"
+   },
+   "pray": "Prince of Peace, quiet our hearts tonight. Make our home a place of your peace. Amen.",
+   "do": "Take three slow breaths together. On each one, pray quietly: Jesus, give us peace."
+  },
+  {
+   "night": 9,
+   "date": "2026-12-07",
+   "reference": "Isaiah 2:4-5",
+   "why": "God dreams of a day when fighting turns into helping. We can practice that now.",
+   "talk": {
+    "little": "What can you do when you feel mad?",
+    "kids": "How can you turn an argument into helping each other?",
+    "grownups": "Is there someone you need to make peace with?"
+   },
+   "pray": "God, help us choose kind words and gentle hands. Let our home walk in your light. Amen.",
+   "do": "Think of a recent argument in the family. Together, act out a do-over where it ends with helping instead."
+  },
+  {
+   "night": 10,
+   "date": "2026-12-08",
+   "reference": "Luke 1:78-79",
+   "why": "Zechariah sang that Jesus would be like the sunrise, guiding our feet into peace.",
+   "talk": {
+    "little": "What do you see when the sun comes up?",
+    "kids": "What is your favorite part of the morning, and why?",
+    "grownups": "What would it look like for your feet to walk in the way of peace this week?"
+   },
+   "pray": "God, like the sunrise, come into our home. Guide our feet in the way of peace. Amen.",
+   "do": "Plan to look out a window together at sunrise this week. Tonight, draw a picture of what you hope to see."
+  },
+  {
+   "night": 11,
+   "date": "2026-12-09",
+   "reference": "Isaiah 26:3",
+   "why": "When our minds stay close to God, our hearts can rest.",
+   "talk": {
+    "little": "What do you think about when you go to bed?",
+    "kids": "What do you do when your mind feels busy or worried?",
+    "grownups": "What helps you keep your mind on God when life gets noisy?"
+   },
+   "pray": "God, keep our minds close to you. Give us rest and trust tonight. Amen.",
+   "do": "Each person shares one worry and one thing they trust God for. Then everyone says together: we can rest."
+  },
+  {
+   "night": 12,
+   "date": "2026-12-10",
+   "reference": "Psalm 4:8",
+   "why": "We can sleep in peace because God keeps watch over us.",
+   "talk": {
+    "little": "Who watches over you when you sleep?",
+    "kids": "What helps you fall asleep when you feel worried?",
+    "grownups": "What would help you rest more deeply this Advent?"
+   },
+   "pray": "Lord, thank you for keeping watch over us. Help us lie down and sleep in peace. Amen.",
+   "do": "Make up a short bedtime blessing together that you can say every night this week."
+  },
+  {
+   "night": 13,
+   "date": "2026-12-11",
+   "reference": "John 14:27",
+   "why": "Jesus gives a peace that is different from what the world gives.",
+   "talk": {
+    "little": "What makes your heart feel happy and calm?",
+    "kids": "What is the difference between being quiet and having peace inside?",
+    "grownups": "What troubles your heart right now that you can bring to Jesus?"
+   },
+   "pray": "Jesus, thank you for your peace. Help our hearts not be troubled or afraid. Amen.",
+   "do": "Pass a pillow around the table. Whoever holds it shares one thing that helps them feel calm."
+  },
+  {
+   "night": 14,
+   "date": "2026-12-12",
+   "reference": "Isaiah 11:6-9",
+   "why": "Isaiah saw a world where even enemies become friends. That is God's peace.",
+   "talk": {
+    "little": "Can you roar like a big bear?",
+    "kids": "If a wolf and a lamb could be friends, what else could change?",
+    "grownups": "What broken relationship do you hope God will mend?"
+   },
+   "pray": "God, we long for your peace in our world. Make us peacemakers starting at home. Amen.",
+   "do": "Draw a picture of two animals that would never be friends, now living together in peace."
+  },
+  {
+   "night": 15,
+   "date": "2026-12-13",
+   "reference": "Isaiah 61:1-3",
+   "why": "Jesus came with good news that turns sadness into joy.",
+   "talk": {
+    "little": "What makes you smile?",
+    "kids": "What good news would you love to tell someone?",
+    "grownups": "Where have you seen God turn sorrow into something good?"
+   },
+   "pray": "God of joy, thank you for good news. Comfort anyone who is sad tonight. Amen.",
+   "do": "Each person shares one piece of good news from today, big or small."
+  },
+  {
+   "night": 16,
+   "date": "2026-12-14",
+   "reference": "Psalm 30:5",
+   "why": "Sad nights don't last forever. Joy comes in the morning.",
+   "talk": {
+    "little": "What do you like to do when you wake up?",
+    "kids": "Tell about a time something sad turned out better than you expected.",
+    "grownups": "How has God met you in a hard season before?"
+   },
+   "pray": "Lord, thank you that sadness does not have the last word. Bring us joy in the morning. Amen.",
+   "do": "Plan a small happy surprise for breakfast tomorrow, like a drawing at someone's place or a silly song."
+  },
+  {
+   "night": 17,
+   "date": "2026-12-15",
+   "reference": "Luke 1:46-49",
+   "why": "Mary sang because God did great things for her. We can sing about God's goodness too.",
+   "talk": {
+    "little": "What song do you like to sing?",
+    "kids": "What great thing has God done for our family this year?",
+    "grownups": "What would your own song of thanks to God include?"
+   },
+   "pray": "God, our hearts praise you. Thank you for the great things you have done for us. Amen.",
+   "do": "Sing a favorite Christmas song together, or make up a short song of thanks."
+  },
+  {
+   "night": 18,
+   "date": "2026-12-16",
+   "reference": "Isaiah 12:2-3",
+   "why": "Joy is like water from a deep well. God never runs dry.",
+   "talk": {
+    "little": "Can you act like you pour a cup?",
+    "kids": "What fills you up when you feel tired or sad?",
+    "grownups": "Where do you go to draw joy when you feel empty?"
+   },
+   "pray": "God, you are our strength and our song. Fill us with joy that does not run dry. Amen.",
+   "do": "Pour everyone a glass of water. Before you drink, each person names one thing that fills them with joy."
+  },
+  {
+   "night": 19,
+   "date": "2026-12-17",
+   "reference": "Luke 1:41-44",
+   "why": "Even before he was born, John jumped for joy when Jesus came near.",
+   "talk": {
+    "little": "Can you jump up for joy?",
+    "kids": "What news would make you jump for joy?",
+    "grownups": "When did you last feel real joy about Jesus being near?"
+   },
+   "pray": "Jesus, when you come near, our hearts leap. Thank you for being with us. Amen.",
+   "do": "Have a one-minute joy jump: everyone jumps and calls out one thing they're thankful for."
+  },
+  {
+   "night": 20,
+   "date": "2026-12-18",
+   "reference": "John 8:12",
+   "why": "Jesus says he is the light of the world. Following him means we don't walk in darkness.",
+   "talk": {
+    "little": "Who can be our light?",
+    "kids": "What does it mean to follow Jesus at school or with friends?",
+    "grownups": "Where is Jesus inviting you to follow him more closely?"
+   },
+   "pray": "Jesus, light of the world, help us follow you. Let us never walk alone in the dark. Amen.",
+   "do": "Play follow the leader around the house with a flashlight. Then talk about what it means to follow Jesus."
+  },
+  {
+   "night": 21,
+   "date": "2026-12-19",
+   "reference": "Matthew 5:14-16",
+   "why": "Jesus says we are the light of the world too, when we let his love shine through us.",
+   "talk": {
+    "little": "Can you show me a big smile?",
+    "kids": "What is one good thing you could do this week that would shine for others?",
+    "grownups": "How can our family shine together this Christmas?"
+   },
+   "pray": "Jesus, help us shine your light through kind words and good deeds. Amen.",
+   "do": "Choose one kind act your family can do together this week for a neighbor or friend, and decide on a day."
+  },
+  {
+   "night": 22,
+   "date": "2026-12-20",
+   "reference": "Luke 1:30-33",
+   "why": "An angel told Mary not to be afraid. God's love was coming to her in a surprising way.",
+   "talk": {
+    "little": "What would you say to an angel?",
+    "kids": "Why do you think the angel said, do not be afraid?",
+    "grownups": "When has God's love surprised you?"
+   },
+   "pray": "God, thank you for loving us first. Help us say yes to you like Mary did. Amen.",
+   "do": "Talk about a time you were surprised by love. Then write the words do not be afraid on a paper for the fridge."
+  },
+  {
+   "night": 23,
+   "date": "2026-12-21",
+   "reference": "Matthew 1:20-23",
+   "why": "Jesus is called Immanuel, God with us. Love came close.",
+   "talk": {
+    "little": "Who do you like to sit close to?",
+    "kids": "What does it mean that God is with us?",
+    "grownups": "Where do you most need to know that God is with you?"
+   },
+   "pray": "Immanuel, thank you for coming close. Be with us at this table tonight. Amen.",
+   "do": "Squeeze into one spot together, like a couch or the floor. Say together: God is with us."
+  },
+  {
+   "night": 24,
+   "date": "2026-12-22",
+   "reference": "Luke 2:4-7",
+   "why": "Jesus was born in a humble place. God's love comes to ordinary homes like ours.",
+   "talk": {
+    "little": "Where do babies sleep?",
+    "kids": "Why do you think God chose a manger and not a palace?",
+    "grownups": "How can our home make room for Jesus this week?"
+   },
+   "pray": "Jesus, you came to a humble place. Make room in our hearts and our home for you. Amen.",
+   "do": "Make a small manger from things at home, like a box and a cloth, and set it where everyone can see it."
+  },
+  {
+   "night": 25,
+   "date": "2026-12-23",
+   "reference": "Luke 2:8-12",
+   "why": "The first people to hear the news were shepherds working at night. God's light found them.",
+   "talk": {
+    "little": "What did the shepherds see?",
+    "kids": "Why do you think God told shepherds first?",
+    "grownups": "Who are the overlooked people God wants to reach through you?"
+   },
+   "pray": "God, thank you that your good news is for everyone. Help us share it with joy. Amen.",
+   "do": "Turn the lights low, then switch them all on at once. Talk about how the shepherds felt."
+  },
+  {
+   "night": 26,
+   "date": "2026-12-24",
+   "reference": "Luke 2:13-16",
+   "why": "Angels filled the sky with praise, and the shepherds hurried to find Jesus.",
+   "talk": {
+    "little": "Can you sing like an angel?",
+    "kids": "If you had been a shepherd, what would you have done first?",
+    "grownups": "What would it look like to hurry toward Jesus this Christmas?"
+   },
+   "pray": "Glory to you, God. Thank you for sending Jesus. Fill our home with peace tonight. Amen.",
+   "do": "Sing one Christmas carol together before bed. If your church has a service tonight, talk about what you hope to hear."
+  },
+  {
+   "night": 27,
+   "date": "2026-12-25",
+   "reference": "John 1:1-5",
+   "why": "Merry Christmas. The light has come, and the darkness cannot overcome it.",
+   "talk": {
+    "little": "Who came at Christmas?",
+    "kids": "What is your favorite part of the Christmas story, and why?",
+    "grownups": "What does it mean for you that the darkness cannot overcome the light?"
+   },
+   "pray": "Jesus, thank you for coming. You are our light. We love you. Amen.",
+   "do": "Together, look back at your wreath and name one thing you learned this Advent. Then say: the light has come."
+  }
+ ]
+}

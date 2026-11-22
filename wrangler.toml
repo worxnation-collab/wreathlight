@@ -1,17 +1,16 @@
 # Wreathlight Worker. Free plan only (Workers Free + D1 Free). No secrets in this file:
-# GEMINI_API_KEY and SESSION_SECRET are set with `wrangler secret put`.
+# GEMINI_API_KEY and SESSION_SECRET are set with `wrangler secret put` (local dev: .dev.vars).
 name = "wreathlight"
 main = "src/worker/index.ts"
 compatibility_date = "2026-11-19"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
-# Static client assets (Vite build) get wired here once src/client exists:
-# [assets]
-# directory = "./dist/client"
-# binding = "ASSETS"
-# not_found_handling = "single-page-application"
-# run_worker_first = ["/api/*"]
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"
@@ -20,15 +19,17 @@ database_id = "dae0718d-7bd9-446e-bf07-8a4f5cad7b9c"
 migrations_dir = "migrations"
 
 [vars]
-# From the public Gemini models + pricing docs on 2026-11-22 (both list a free tier).
-# Re-confirm with ListModels once GEMINI_API_KEY exists.
+# Confirmed with ListModels (Matthew's free-tier key) and the public pricing page, 2026-11-22.
 GEMINI_MODEL = "gemini-3.8-flash"
 GEMINI_FALLBACK_MODEL = "gemini-3.5-flash-lite"
 AI_ENABLED = "true"
+MAX_AI_CALLS_PER_CHURCH_PER_DAY = "20"
+MAX_AI_CALLS_GLOBAL_PER_DAY = "300"
 
-# Hourly: demo-church reset. 08:00 UTC daily: purge ai_runs prompt text older than 7 days.
+# Free plan allows 5 cron triggers. "0 * * * *" = hourly demo-church reset + ai_runs prompt purge
+# (prompt text older than 7 days) + stale rate-limit rows. See scheduled() in src/worker/index.ts.
 [triggers]
-crons = ["0 * * * *", "0 8 * * *"]
+crons = ["0 * * * *"]
 
 [observability]
 enabled = true

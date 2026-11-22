@@ -1,0 +1,331 @@
+{
+ "theme": "light",
+ "label": "Plan inicial: escrito con ayuda de IA y revisado por una persona.",
+ "status": "draft-pending-review",
+ "nights": [
+  {
+   "night": 1,
+   "date": "2026-11-29",
+   "why": "El Adviento empieza en la oscuridad, y la primera promesa de Dios es sencilla: la luz viene.",
+   "talk": {
+    "little": "¿Qué ves cuando se apagan todas las luces?",
+    "kids": "¿Cuándo has sentido que esperabas en la oscuridad?",
+    "grownups": "¿Dónde necesitas más luz en esta temporada?"
+   },
+   "pray": "Dios de luz, gracias porque la oscuridad no gana. Ayúdanos a esperar a Jesús con esperanza. Amén.",
+   "do": "Apaguen las luces un minuto y siéntense juntos en silencio. Luego enciendan una lámpara y digan juntos: la luz viene."
+  },
+  {
+   "night": 2,
+   "date": "2026-11-30",
+   "why": "La luz de Dios no es solo para mirarla. Brilla sobre nosotros para que también brillemos.",
+   "talk": {
+    "little": "¿Puedes pararte alto y brillar como el sol?",
+    "kids": "¿De qué manera tu cara puede mostrar la luz de Dios a alguien mañana?",
+    "grownups": "¿Quién ha sido una luz para ti, y se lo has dicho?"
+   },
+   "pray": "Jesús, brilla sobre nuestra familia para que brillemos para otros. Amén.",
+   "do": "Formen un círculo y, por turnos, digan algo amable sobre la persona a su izquierda."
+  },
+  {
+   "night": 3,
+   "date": "2026-12-01",
+   "why": "Cuando sentimos miedo, podemos recordar quién es nuestra luz.",
+   "talk": {
+    "little": "¿Qué te ayuda a sentirte seguro en la noche?",
+    "kids": "¿Qué te da miedo, y cómo te podría ayudar Dios?",
+    "grownups": "¿Qué temor podrías entregarle a Dios esta noche?"
+   },
+   "pray": "Señor, tú eres nuestra luz. Cuando tengamos miedo, recuérdanos que estás cerca. Amén.",
+   "do": "Cada persona dice una cosa que va a recordar cuando sienta miedo por la noche."
+  },
+  {
+   "night": 4,
+   "date": "2026-12-02",
+   "why": "Una lámpara muestra el próximo paso, no todo el camino. La palabra de Dios nos ayuda a dar el próximo paso.",
+   "talk": {
+    "little": "¿Puedes dar un pasito y parar?",
+    "kids": "¿Qué decisión tienes esta semana en la que necesitas ayuda?",
+    "grownups": "¿Qué próximo paso te muestra Dios, aunque no veas todo el camino?"
+   },
+   "pray": "Dios, ilumina el próximo paso de cada uno. Ayúdanos a seguirte paso a paso. Amén.",
+   "do": "Con una linterna, guíen por turnos a alguien a través de un cuarto con poca luz, un paso a la vez."
+  },
+  {
+   "night": 5,
+   "date": "2026-12-03",
+   "why": "Aun cuando caemos o estamos tristes, Dios es nuestra luz y nos ayuda a levantarnos.",
+   "talk": {
+    "little": "¿Qué haces cuando te caes?",
+    "kids": "Cuenta de una vez que cometiste un error y tuviste otra oportunidad.",
+    "grownups": "¿Dónde necesitas escuchar que caer no es el final de la historia?"
+   },
+   "pray": "Señor, cuando caemos, ayúdanos a levantarnos. Gracias porque nunca nos dejas en la oscuridad. Amén.",
+   "do": "Todos se sientan en el piso y ayudan a otra persona a ponerse de pie. Hablen de quién les ayuda a levantarse."
+  },
+  {
+   "night": 6,
+   "date": "2026-12-04",
+   "why": "Dios enciende nuestra lámpara. No tenemos que hacer nuestra propia luz.",
+   "talk": {
+    "little": "¿Quién prende las luces en nuestra casa?",
+    "kids": "¿Qué cosa difícil te podría ayudar Dios esta semana?",
+    "grownups": "¿Qué intentas hacer con tus propias fuerzas que Dios quiere ayudarte a hacer?"
+   },
+   "pray": "Dios, gracias por encender nuestra lámpara. Ayúdanos a confiar en ti. Amén.",
+   "do": "Un adulto enciende una vela, o usen una vela de batería. Cada uno nombra algo difícil y una vez que Dios le ayudó."
+  },
+  {
+   "night": 7,
+   "date": "2026-12-05",
+   "why": "La luz de Dios es para todos, sobre todo para quienes se sienten solos.",
+   "talk": {
+    "little": "¿A quién le puedes dar un abrazo?",
+    "kids": "¿Quién en la escuela o la iglesia se siente solo, y cómo lo puedes incluir?",
+    "grownups": "¿Quién en nuestro vecindario necesita un poco de luz este mes?"
+   },
+   "pray": "Dios, abre nuestros ojos a quienes se sienten solos. Usa a nuestra familia para compartir tu luz. Amén.",
+   "do": "Dibujen o escriban una nota de gracias para alguien que ayuda a su familia, y planeen cómo dársela."
+  },
+  {
+   "night": 8,
+   "date": "2026-12-06",
+   "why": "A Jesús lo llaman Príncipe de Paz. Su paz nunca se acaba.",
+   "talk": {
+    "little": "¿Cómo se siente estar tranquilo?",
+    "kids": "¿Cuál nombre de Jesús en esta lectura te gusta más, y por qué?",
+    "grownups": "¿Dónde necesitas la paz que solo Jesús da?"
+   },
+   "pray": "Príncipe de Paz, calma nuestro corazón esta noche. Haz de nuestro hogar un lugar de paz. Amén.",
+   "do": "Respiren lento tres veces juntos. En cada respiro, oren en silencio: Jesús, danos paz."
+  },
+  {
+   "night": 9,
+   "date": "2026-12-07",
+   "why": "Dios sueña con un día en que las peleas se conviertan en ayuda. Podemos practicarlo ya.",
+   "talk": {
+    "little": "¿Qué puedes hacer cuando te enojas?",
+    "kids": "¿Cómo pueden convertir una discusión en ayudarse?",
+    "grownups": "¿Hay alguien con quien necesitas hacer las paces?"
+   },
+   "pray": "Dios, ayúdanos a escoger palabras amables y manos suaves. Que nuestro hogar camine en tu luz. Amén.",
+   "do": "Piensen en una discusión reciente en la familia. Juntos, actúen otra vez la escena terminando con ayuda."
+  },
+  {
+   "night": 10,
+   "date": "2026-12-08",
+   "why": "Zacarías cantó que Jesús sería como el amanecer, guiando nuestros pies por el camino de paz.",
+   "talk": {
+    "little": "¿Qué ves cuando sale el sol?",
+    "kids": "¿Cuál es tu parte favorita de la mañana, y por qué?",
+    "grownups": "¿Cómo se vería caminar por el camino de paz esta semana?"
+   },
+   "pray": "Dios, como el amanecer, entra en nuestro hogar. Guía nuestros pies por el camino de paz. Amén.",
+   "do": "Planeen mirar el amanecer juntos por una ventana esta semana. Esta noche, dibujen lo que esperan ver."
+  },
+  {
+   "night": 11,
+   "date": "2026-12-09",
+   "why": "Cuando nuestra mente está cerca de Dios, nuestro corazón puede descansar.",
+   "talk": {
+    "little": "¿En qué piensas cuando te vas a dormir?",
+    "kids": "¿Qué haces cuando tu mente está ocupada o preocupada?",
+    "grownups": "¿Qué te ayuda a pensar en Dios cuando la vida hace mucho ruido?"
+   },
+   "pray": "Dios, mantén nuestra mente cerca de ti. Danos descanso y confianza esta noche. Amén.",
+   "do": "Cada persona comparte una preocupación y algo en lo que confía en Dios. Luego todos dicen: podemos descansar."
+  },
+  {
+   "night": 12,
+   "date": "2026-12-10",
+   "why": "Podemos dormir en paz porque Dios nos cuida.",
+   "talk": {
+    "little": "¿Quién te cuida cuando duermes?",
+    "kids": "¿Qué te ayuda a dormir cuando estás preocupado?",
+    "grownups": "¿Qué te ayudaría a descansar mejor en este Adviento?"
+   },
+   "pray": "Señor, gracias por cuidarnos. Ayúdanos a acostarnos y dormir en paz. Amén.",
+   "do": "Inventen juntos una bendición corta para decir cada noche de esta semana antes de dormir."
+  },
+  {
+   "night": 13,
+   "date": "2026-12-11",
+   "why": "Jesús da una paz diferente a la que da el mundo.",
+   "talk": {
+    "little": "¿Qué hace que tu corazón se sienta feliz y tranquilo?",
+    "kids": "¿Cuál es la diferencia entre estar callado y tener paz por dentro?",
+    "grownups": "¿Qué turba tu corazón ahora que puedes llevarle a Jesús?"
+   },
+   "pray": "Jesús, gracias por tu paz. Ayuda a nuestro corazón a no turbarse ni tener miedo. Amén.",
+   "do": "Pasen una almohada alrededor de la mesa. Quien la tenga comparte algo que le ayuda a sentirse tranquilo."
+  },
+  {
+   "night": 14,
+   "date": "2026-12-12",
+   "why": "Isaías vio un mundo donde hasta los enemigos son amigos. Esa es la paz de Dios.",
+   "talk": {
+    "little": "¿Puedes rugir como un oso grande?",
+    "kids": "Si un lobo y un cordero pudieran ser amigos, ¿qué más podría cambiar?",
+    "grownups": "¿Qué relación rota esperas que Dios sane?"
+   },
+   "pray": "Dios, anhelamos tu paz en el mundo. Haznos pacificadores, empezando en casa. Amén.",
+   "do": "Dibujen dos animales que nunca serían amigos, ahora viviendo juntos en paz."
+  },
+  {
+   "night": 15,
+   "date": "2026-12-13",
+   "why": "Jesús vino con buenas noticias que cambian la tristeza en gozo.",
+   "talk": {
+    "little": "¿Qué te hace sonreír?",
+    "kids": "¿Qué buena noticia te encantaría contarle a alguien?",
+    "grownups": "¿Dónde has visto a Dios cambiar la tristeza en algo bueno?"
+   },
+   "pray": "Dios de gozo, gracias por las buenas noticias. Consuela a quien esté triste esta noche. Amén.",
+   "do": "Cada persona comparte una buena noticia de hoy, grande o pequeña."
+  },
+  {
+   "night": 16,
+   "date": "2026-12-14",
+   "why": "Las noches tristes no duran para siempre. El gozo viene en la mañana.",
+   "talk": {
+    "little": "¿Qué te gusta hacer cuando te despiertas?",
+    "kids": "Cuenta de una vez que algo triste terminó mejor de lo que esperabas.",
+    "grownups": "¿Cómo te ha encontrado Dios en una temporada difícil?"
+   },
+   "pray": "Señor, gracias porque la tristeza no tiene la última palabra. Danos gozo en la mañana. Amén.",
+   "do": "Planeen una pequeña sorpresa alegre para el desayuno de mañana, como un dibujo o una canción chistosa."
+  },
+  {
+   "night": 17,
+   "date": "2026-12-15",
+   "why": "María cantó porque Dios hizo grandes cosas por ella. Nosotros también podemos cantar de su bondad.",
+   "talk": {
+    "little": "¿Qué canción te gusta cantar?",
+    "kids": "¿Qué cosa grande ha hecho Dios por nuestra familia este año?",
+    "grownups": "¿Qué incluiría tu propia canción de gracias a Dios?"
+   },
+   "pray": "Dios, nuestro corazón te alaba. Gracias por las grandes cosas que has hecho por nosotros. Amén.",
+   "do": "Canten juntos una canción navideña favorita, o inventen una canción corta de gracias."
+  },
+  {
+   "night": 18,
+   "date": "2026-12-16",
+   "why": "El gozo es como agua de un pozo profundo. Dios nunca se seca.",
+   "talk": {
+    "little": "¿Puedes hacer como que sirves un vaso?",
+    "kids": "¿Qué te llena cuando estás cansado o triste?",
+    "grownups": "¿A dónde vas a buscar gozo cuando te sientes vacío?"
+   },
+   "pray": "Dios, tú eres nuestra fuerza y nuestra canción. Llénanos de un gozo que no se acaba. Amén.",
+   "do": "Sirvan un vaso de agua para cada uno. Antes de beber, cada persona nombra algo que le llena de gozo."
+  },
+  {
+   "night": 19,
+   "date": "2026-12-17",
+   "why": "Aun antes de nacer, Juan saltó de gozo cuando Jesús se acercó.",
+   "talk": {
+    "little": "¿Puedes saltar de alegría?",
+    "kids": "¿Qué noticia te haría saltar de gozo?",
+    "grownups": "¿Cuándo sentiste gozo de verdad porque Jesús estaba cerca?"
+   },
+   "pray": "Jesús, cuando te acercas, nuestro corazón salta. Gracias por estar con nosotros. Amén.",
+   "do": "Hagan un minuto de saltos de gozo: todos saltan y dicen algo por lo que están agradecidos."
+  },
+  {
+   "night": 20,
+   "date": "2026-12-18",
+   "why": "Jesús dice que él es la luz del mundo. Seguirlo es no andar en tinieblas.",
+   "talk": {
+    "little": "¿Quién puede ser nuestra luz?",
+    "kids": "¿Qué significa seguir a Jesús en la escuela o con amigos?",
+    "grownups": "¿Dónde te invita Jesús a seguirlo más de cerca?"
+   },
+   "pray": "Jesús, luz del mundo, ayúdanos a seguirte. Que nunca andemos solos en la oscuridad. Amén.",
+   "do": "Jueguen a seguir al líder por la casa con una linterna. Luego hablen de lo que significa seguir a Jesús."
+  },
+  {
+   "night": 21,
+   "date": "2026-12-19",
+   "why": "Jesús dice que nosotros también somos luz del mundo cuando dejamos brillar su amor.",
+   "talk": {
+    "little": "¿Me enseñas una sonrisa grande?",
+    "kids": "¿Qué cosa buena podrías hacer esta semana que brille para otros?",
+    "grownups": "¿Cómo puede nuestra familia brillar junta esta Navidad?"
+   },
+   "pray": "Jesús, ayúdanos a brillar con tu luz por medio de palabras amables y buenas obras. Amén.",
+   "do": "Escojan un acto amable que su familia pueda hacer junta esta semana por un vecino o amigo, y decidan el día."
+  },
+  {
+   "night": 22,
+   "date": "2026-12-20",
+   "why": "Un ángel le dijo a María que no tuviera miedo. El amor de Dios venía de una forma sorprendente.",
+   "talk": {
+    "little": "¿Qué le dirías a un ángel?",
+    "kids": "¿Por qué crees que el ángel dijo: no temas?",
+    "grownups": "¿Cuándo te ha sorprendido el amor de Dios?"
+   },
+   "pray": "Dios, gracias por amarnos primero. Ayúdanos a decirte que sí como María. Amén.",
+   "do": "Hablen de una vez que el amor los sorprendió. Luego escriban no temas en un papel para el refrigerador."
+  },
+  {
+   "night": 23,
+   "date": "2026-12-21",
+   "why": "A Jesús lo llaman Emanuel, Dios con nosotros. El amor se acercó.",
+   "talk": {
+    "little": "¿Con quién te gusta sentarte cerca?",
+    "kids": "¿Qué significa que Dios está con nosotros?",
+    "grownups": "¿Dónde más necesitas saber que Dios está contigo?"
+   },
+   "pray": "Emanuel, gracias por acercarte. Quédate con nosotros en esta mesa esta noche. Amén.",
+   "do": "Apriétense todos en un solo lugar, como el sofá o el piso. Digan juntos: Dios está con nosotros."
+  },
+  {
+   "night": 24,
+   "date": "2026-12-22",
+   "why": "Jesús nació en un lugar humilde. El amor de Dios llega a hogares comunes como el nuestro.",
+   "talk": {
+    "little": "¿Dónde duermen los bebés?",
+    "kids": "¿Por qué crees que Dios escogió un pesebre y no un palacio?",
+    "grownups": "¿Cómo puede nuestro hogar hacerle lugar a Jesús esta semana?"
+   },
+   "pray": "Jesús, viniste a un lugar humilde. Haz lugar en nuestro corazón y nuestro hogar para ti. Amén.",
+   "do": "Hagan un pequeño pesebre con cosas de la casa, como una caja y una tela, y pónganlo donde todos lo vean."
+  },
+  {
+   "night": 25,
+   "date": "2026-12-23",
+   "why": "Los primeros en oír la noticia fueron pastores que trabajaban de noche. La luz de Dios los encontró.",
+   "talk": {
+    "little": "¿Qué vieron los pastores?",
+    "kids": "¿Por qué crees que Dios les avisó primero a los pastores?",
+    "grownups": "¿Quiénes son las personas olvidadas que Dios quiere alcanzar por medio de ti?"
+   },
+   "pray": "Dios, gracias porque tus buenas noticias son para todos. Ayúdanos a compartirlas con gozo. Amén.",
+   "do": "Bajen las luces y luego préndanlas todas a la vez. Hablen de cómo se sintieron los pastores."
+  },
+  {
+   "night": 26,
+   "date": "2026-12-24",
+   "why": "Los ángeles llenaron el cielo de alabanza, y los pastores fueron aprisa a buscar a Jesús.",
+   "talk": {
+    "little": "¿Puedes cantar como un ángel?",
+    "kids": "Si fueras un pastor, ¿qué habrías hecho primero?",
+    "grownups": "¿Cómo se vería ir aprisa hacia Jesús esta Navidad?"
+   },
+   "pray": "Gloria a ti, Dios. Gracias por enviar a Jesús. Llena nuestro hogar de paz esta noche. Amén.",
+   "do": "Canten juntos un villancico antes de dormir. Si su iglesia tiene un servicio hoy, hablen de lo que esperan escuchar."
+  },
+  {
+   "night": 27,
+   "date": "2026-12-25",
+   "why": "Feliz Navidad. La luz ha venido, y la oscuridad no la puede vencer.",
+   "talk": {
+    "little": "¿Quién vino en Navidad?",
+    "kids": "¿Cuál es tu parte favorita de la historia de Navidad, y por qué?",
+    "grownups": "¿Qué significa para ti que la oscuridad no puede vencer a la luz?"
+   },
+   "pray": "Jesús, gracias por venir. Tú eres nuestra luz. Te amamos. Amén.",
+   "do": "Juntos, miren su corona y nombren algo que aprendieron este Adviento. Luego digan: la luz ha venido."
+  }
+ ]
+}
