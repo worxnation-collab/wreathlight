@@ -207,7 +207,7 @@ export function validateNight(n: Pick<ModelNight, "reference" | "why" | "talk" |
   if (little) {
     const g = gradeLevel(little);
     if (g > LITTLE_MAX_GRADE) {
-      soft("READING_LEVEL", `Little ones question reads at about grade ${Math.round(g)}; aim for grade ${LITTLE_MAX_GRADE} or below.`, "talk.little");
+      soft("READING_LEVEL", `Little ones question reads at about grade ${g.toFixed(1)}; aim for grade ${LITTLE_MAX_GRADE} or below.`, "talk.little");
       res.checks.readingLevel = false;
     }
   }
