@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { APP_NAME, TAGLINE } from "../../shared/brand";
 import { Wreath } from "../components/Wreath";
+import { Wordmark } from "../components/Wordmark";
 import { Link, navigate } from "../router";
 
 export function Home() {
@@ -11,7 +12,7 @@ export function Home() {
       <section className="hero">
         <Wreath candleColors={["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={1} christLit={false} title={`${APP_NAME} wreath`}
           ring={Array.from({ length: 27 }, (_, i) => ({ night: i + 1, glow: i < 3 }))} className="hero-wreath" />
-        <h1>{APP_NAME}</h1>
+        <Wordmark as="h1" inverted />
         <p>{TAGLINE}</p>
         <form className="row" style={{ justifyContent: "center" }} onSubmit={(e) => { e.preventDefault(); if (code.trim()) navigate(`/j/${code.trim().toUpperCase()}`); }}>
           <label htmlFor="code" className="sr-only">Church code</label>

@@ -34,6 +34,8 @@ export default function HowAI() {
             <li>Sin enlaces, correos, compras ni fuego sin un adulto.</li>
           </ul>
           <p>Si un borrador falla, se intenta de nuevo, luego con otro modelo, y si no, se usa el Plan inicial revisado por una persona. La iglesia puede apagar la IA cuando quiera.</p>
+          <h2>El arte pintado</h2>
+          <p>La corona de Adviento pintada, las ilustraciones de cada semana en las tarjetas de familia y el breve bucle de la llama en el proyector del domingo se generaron con Fal (Google Nano Banana Pro para las imágenes fijas y Alibaba Wan 3.0 Prime para el bucle) y los revisó una persona. No muestran personas. No son Escritura. La corona interactiva, con etiquetas accesibles y el anillo de luces de cada noche, está dibujada a mano en SVG y permanece en la aplicación junto a las pinturas. En el repositorio público, DATA-SOURCES.md explica los modelos, las licencias y por qué este arte queda fuera de la reclamación de derechos de autor de la licencia MIT.</p>
           <h2>Qué datos guardamos</h2>
           <p>Solo números: cuántos hogares se unieron y cuántas velas se encendieron. Los números menores de 5 se muestran como “menos de 5”.</p>
           <h2>Lo que nunca recogemos</h2>
@@ -63,6 +65,8 @@ export default function HowAI() {
           <li>No links, emails, purchases, or open flame without an adult.</li>
         </ul>
         <p>If a draft fails, it is retried, then tried on a backup model, then replaced by the person-reviewed Starter Plan. The church can turn AI off at any time.</p>
+        <h2>Painted art</h2>
+        <p>The painted Advent wreath, the week illustrations on family cards, and the short candle-flame loop on the Sunday projector were generated with Fal (Google Nano Banana Pro for stills, Alibaba Wan 3.0 Prime for the loop) and reviewed by a person. They show no people. They are not Scripture. The interactive wreath, with accessible labels and the ring of nightly lights, is hand-drawn SVG and stays in the app beside the paintings. DATA-SOURCES.md in the public repository explains the models, licenses, and why this art is excluded from the MIT copyright claim.</p>
         <h2>What data we keep</h2>
         <p>Counts only: how many households joined and how many candles were lit. Any count under 5 shows as “fewer than 5”.</p>
         <h2>What we never collect</h2>

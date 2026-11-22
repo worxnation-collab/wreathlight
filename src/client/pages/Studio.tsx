@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { api, ApiError } from "../api";
 import { Link, navigate, usePath } from "../router";
 import { APP_NAME } from "../../shared/brand";
+import { Wordmark } from "../components/Wordmark";
 import { SEASONS, TRADITIONS, TRANSLATIONS, seasonLabel } from "../../shared/season";
 import { THEMES } from "../../shared/themes";
 import { Check, Cross, Lock, Spark, Warn } from "../components/Icons";
@@ -36,7 +37,7 @@ function Shell({ children, me, onLogout }: { children: React.ReactNode; me?: any
     <div className="studio">
       <a className="skip" href="#main">Skip to content</a>
       <header className="topbar">
-        <Link to="/" className="brand"><img src="/favicon.svg" width="28" height="28" alt="" />{APP_NAME} <span className="muted small brand-sub" style={{ fontFamily: "var(--sans)", fontWeight: 400 }}>Studio</span></Link>
+        <Wordmark suffix="Studio" />
         {me && (
           <div className="row topbar-who" style={{ gap: 8 }}>
             <span className="muted small who" title={me.pastor.display_name}>{me.pastor.display_name}</span>
