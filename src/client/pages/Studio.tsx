@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 import { api, ApiError } from "../api";
 import { Link, navigate, usePath } from "../router";
 import { APP_NAME } from "../../shared/brand";
-import { SEASONS, TRADITIONS, TRANSLATIONS, weekOf } from "../../shared/season";
+import { SEASONS, TRADITIONS, TRANSLATIONS, seasonLabel } from "../../shared/season";
 import { THEMES } from "../../shared/themes";
 import { Check, Cross, Lock, Spark, Warn } from "../components/Icons";
 import { fmtDate } from "../i18n";
@@ -36,10 +36,10 @@ function Shell({ children, me, onLogout }: { children: React.ReactNode; me?: any
     <div className="studio">
       <a className="skip" href="#main">Skip to content</a>
       <header className="topbar">
-        <Link to="/" className="brand"><img src="/favicon.svg" width="28" height="28" alt="" />{APP_NAME} <span className="muted small" style={{ fontFamily: "var(--sans)", fontWeight: 400 }}>Studio</span></Link>
+        <Link to="/" className="brand"><img src="/favicon.svg" width="28" height="28" alt="" />{APP_NAME} <span className="muted small brand-sub" style={{ fontFamily: "var(--sans)", fontWeight: 400 }}>Studio</span></Link>
         {me && (
-          <div className="row" style={{ gap: 8 }}>
-            <span className="muted small">{me.pastor.display_name}</span>
+          <div className="row topbar-who" style={{ gap: 8 }}>
+            <span className="muted small who" title={me.pastor.display_name}>{me.pastor.display_name}</span>
             <button className="btn btn-ghost btn-small" onClick={onLogout}>Sign out</button>
           </div>
         )}
@@ -324,10 +324,13 @@ function NightsTab({ d, reload, setD }: { d: any; reload: () => Promise<void>; s
             <h2 style={{ marginBottom: 4 }}>{nights.length ? `${approved} of ${nights.length} nights approved` : "Draft your Advent"}</h2>
             <p className="muted" style={{ margin: 0 }}>{ch.ai_on ? "AI drafts a week at a time. Code fills in Scripture and checks every line. You approve each night." : "AI is off: every night comes from the Starter Plan. You still approve each night."}</p>
           </div>
-          <button className="btn btn-gold" onClick={() => draftAll(nights.length > 0)} disabled={drafting}>
-            <Spark /> {drafting ? "Drafting…" : nights.length ? "Redraft unapproved nights" : "Draft all nights"}
-          </button>
+          {!ch.is_demo && (
+            <button className="btn btn-gold" onClick={() => draftAll(nights.length > 0)} disabled={drafting}>
+              <Spark /> {drafting ? "Drafting…" : nights.length ? "Redraft unapproved nights" : "Draft all nights"}
+            </button>
+          )}
         </div>
+        {ch.is_demo && <p className="note" style={{ marginTop: 12 }}>This is the shared demo church, so redrafting the whole season is turned off. Open any night to edit, approve, or try “Regenerate this night”. Everything resets every hour.</p>}
         {d.ai_note && <p className="note" style={{ marginTop: 12 }}>{d.ai_note}</p>}
         {state && state.weeks?.length > 0 && (drafting || elapsed !== null) && <div style={{ marginTop: 12 }}><DraftProgress state={state} translation={TRANSLATIONS[ch.translation as "bsb"].short} /></div>}
         {elapsed !== null && <p className="small muted" style={{ marginTop: 8 }}>Drafted and checked in {(elapsed / 1000).toFixed(1)} seconds.</p>}
@@ -392,7 +395,7 @@ function NightReview({ n, ch, onChange }: { n: Night; ch: Church; onChange: (n: 
     try { onChange(await fn()); } catch (e: any) { setErr(e instanceof ApiError ? e.message : "Something went wrong."); } finally { setBusy(""); }
   };
   const tr = TRANSLATIONS[ch.translation as "bsb"].short;
-  const candle = TRADITIONS[ch.tradition as "hope"].candles[weekOf(n.date) - 1].en;
+  const weekLabel = seasonLabel(n.date, ch.tradition as "hope", "en");
   const status = n.status === "approved" ? <span className="pill ok"><Check /> Approved</span> : n.status === "rejected" ? <span className="pill bad">Rejected</span>
     : n.checks?.ok ? <span className="pill">Draft</span> : <span className="pill bad"><Warn /> Needs a fix</span>;
   const sourceLabel = n.source === "starter" ? "From the Starter Plan" : n.source === "pastor" ? "Written by the pastor" : `AI-drafted${n.model ? ` (${n.model})` : ""}`;
@@ -401,7 +404,7 @@ function NightReview({ n, ch, onChange }: { n: Night; ch: Church; onChange: (n: 
       <div className="night-head">
         <div>
           <h3 id={`n${n.night}`} style={{ margin: 0 }}>Night {n.night} · {fmtDate(n.date, "en", { weekday: "short", month: "short", day: "numeric" })}</h3>
-          <div className="small muted">{candle} week · {sourceLabel}{n.edited ? ", edited" : ""}</div>
+          <div className="small muted">{weekLabel} · {sourceLabel}{n.edited ? ", edited" : ""}</div>
         </div>
         {status}
       </div>
@@ -511,7 +514,6 @@ function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; toda
   };
   return (
     <div style={{ display: "grid", gap: 18 }}>
-      {d.is_demo && <p><span className="pill demo">Demo data</span></p>}
       <div className="grid2">
         <div className="card"><div className="muted small">Households joined</div><div className="stat">{d.households.label}</div></div>
         <div className="card"><div className="muted small">This week (week {d.this_week.week})</div><div className="stat">{d.this_week.candles.label}</div><div className="muted small">candles lit by {d.this_week.households.label} households</div></div>

@@ -12,7 +12,7 @@ import { SEASONS, TRADITIONS, TRANSLATIONS, seasonNights, todayIn, weekOf, ADVEN
 import { validateNight, numbersMatch, type ValidationResult } from "../shared/validator";
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
-import { resetDemo } from "./demo";
+import { resetDemo, demoResetPaused } from "./demo";
 import { APP_NAME } from "../shared/brand";
 
 useShingleData(shingles);
@@ -282,9 +282,12 @@ async function runDraftStep(c: C, ch: ChurchRow, state: DraftState): Promise<Dra
   if (state.weeks.every((w) => w.status === "done")) { state.status = "done"; state.finished_at = nowIso(); }
   return state;
 }
+const DEMO_REDRAFT_NOTE = "Redrafting the whole season is turned off for the demo church. Try “Regenerate this night” on any single night instead.";
 app.post("/api/churches/:id/draft", requirePastor, async (c) => {
   const ch = await ownedChurch(c, c.req.param("id")!);
   if (!ch) return c.json({ error: "not_found" }, 404);
+  // Demo church: whole-season redraft is off so visitors can't spend the shared AI quota or wipe the demo.
+  if (ch.is_demo) return c.json({ error: "demo_locked", message: DEMO_REDRAFT_NOTE }, 403);
   const b = await body(c, z.object({ restart: z.boolean().default(false) }));
   if (isResp(b)) return b;
   let state: DraftState | null = ch.draft_json ? JSON.parse(ch.draft_json) : null;
@@ -480,7 +483,8 @@ app.get("/api/public/:code", async (c) => {
       code: ch.code, name: ch.name, city: ch.city ?? "", pastor_display_name: ch.pastor_display_name, tradition: ch.tradition,
       candles: TRADITIONS[ch.tradition].candles, translation: TRANSLATIONS[ch.translation], spanish_on: !!ch.spanish_on, ai_on: !!ch.ai_on && c.env.AI_ENABLED !== "false",
       xmas_eve_times: ch.xmas_eve_times ?? "", is_demo: !!ch.is_demo,
-      keep_going: ch.keep_going_on ? { church_url: ch.keep_going_church_url ?? "" } : null,
+      // "Keep going" card appears from Christmas Day on, in every mode (including demo preview).
+      keep_going: ch.keep_going_on && today >= CHRISTMAS ? { church_url: ch.keep_going_church_url ?? "" } : null,
       season_start: ch.season_start, season_end: ch.season_end, season_length: season.length,
     },
     today, tonight, preview, demo_early: demoEarly, after_christmas: today > CHRISTMAS,
@@ -548,6 +552,8 @@ export default {
     await env.DB.prepare("UPDATE ai_runs SET prompt_text = NULL WHERE created_at < ? AND prompt_text IS NOT NULL").bind(cutoff).run();
     await env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(new Date(Date.now() - 2 * 86400000).toISOString()).run();
     // Hourly demo-church reset to its seed (same statements as scripts/seed-demo.ts).
+    // Paused via DEMO_RESET_PAUSED or app_flags.demo_reset_paused (e.g. while capturing a new snapshot).
+    if (await demoResetPaused(env.DB, env.DEMO_RESET_PAUSED)) { console.log("demo reset paused"); return; }
     await resetDemo(env.DB);
   },
 };

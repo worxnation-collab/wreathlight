@@ -195,3 +195,15 @@ textarea.input { min-height: 72px; resize: vertical; }
 .fcard.howai h2:first-of-type { margin-top: 0; }
 .howai p, .howai ul { margin: 0; }
 .howai ul { padding-left: 1.2em; display: grid; gap: 4px; }
+
+/* Studio on phones: one-line top bar, tabs wrap instead of scrolling sideways. */
+.topbar-who { flex-wrap: nowrap; min-width: 0; }
+.topbar-who .btn { white-space: nowrap; flex-shrink: 0; }
+.topbar-who .who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 38vw; }
+@media (max-width: 520px) {
+  .topbar { padding: 10px 14px; gap: 8px; }
+  .topbar .brand { font-size: 1.15rem; gap: 8px; }
+  .topbar .brand-sub { display: none; }
+  .tabs { flex-wrap: wrap; overflow-x: visible; }
+  .tab { padding: 10px 10px; }
+}
