@@ -178,3 +178,20 @@ textarea.input { min-height: 72px; resize: vertical; }
 .hero-wreath { width: min(420px, 90vw); }
 .family svg[role="img"] { width: 100%; max-width: 440px; display: block; margin: 0 auto; }
 .phones svg[role="img"] { width: min(320px, 80vw); margin: 0 auto 10px; display: block; }
+
+/* ---------- home: demo entry ---------- */
+.hero-sub { font-size: 0.98rem !important; color: #c9c1ac !important; margin-top: 18px !important; }
+.demo-card { display: grid; gap: 14px; }
+.demo-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.demo-link { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fbf5e6; color: var(--text); text-decoration: none; transition: border-color 0.15s, transform 0.1s; }
+.demo-link:hover, .demo-link:focus-visible { border-color: var(--gold); transform: translateY(-1px); }
+.demo-link strong { font-family: var(--serif); font-size: 1.08rem; color: var(--pine); }
+.demo-link span { font-size: 0.92rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .demo-link { transition: none; } .demo-link:hover { transform: none; } }
+
+/* ---------- how we use AI ---------- */
+.howai { display: grid; gap: 6px; }
+.fcard.howai h2 { margin: 16px 0 2px; font-size: 1.3rem; }
+.fcard.howai h2:first-of-type { margin-top: 0; }
+.howai p, .howai ul { margin: 0; }
+.howai ul { padding-left: 1.2em; display: grid; gap: 4px; }

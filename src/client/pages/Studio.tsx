@@ -84,7 +84,7 @@ function Auth({ onDone }: { onDone: () => void }) {
           <label htmlFor="pw">Password</label>
           <input id="pw" type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={mode === "up" ? 10 : 1} autoComplete={mode === "up" ? "new-password" : "current-password"} />
           {mode === "up" && <span className="hint">At least 10 characters.</span>}
-          {mode === "in" && <span className="hint">Forgot it? Contact your Wreathlight admin.</span>}
+          {mode === "in" && <span className="hint">Forgot it? Contact your Wreathlight admin. Judging? Use the demo login from the submission.</span>}
         </div>
         {err && <p className="error" role="alert">{err}</p>}
         <button className="btn btn-primary" style={{ width: "100%" }} disabled={busy}>{mode === "in" ? "Sign in" : "Create account"}</button>
