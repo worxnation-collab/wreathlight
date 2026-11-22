@@ -49,6 +49,8 @@ function hardReasons(r: ValidationResult): string[] {
  * → fallback model once → Starter Plan labeled "From the Starter Plan".
  */
 export async function draftWeek(deps: WeekDeps, input: WeekInput): Promise<DraftedNight[]> {
+  // Every night this week is already approved: nothing to draft, so don't spend a model call.
+  if (input.nights.length === 0) return [];
   const vctx = (used: Set<string>) => ({ translation: input.translation, spanish: input.spanish, tradition: input.tradition, usedRefKeys: used });
   const base: Omit<PromptInput, "nights"> = {
     theme: input.theme, tradition: input.tradition, translation: input.translation, spanish: input.spanish,
