@@ -12,7 +12,7 @@ import { SEASONS, TRADITIONS, TRANSLATIONS, seasonNights, todayIn, weekOf, ADVEN
 import { validateNight, numbersMatch, type ValidationResult } from "../shared/validator";
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
-import { resetDemo, demoResetPaused } from "./demo";
+import { resetDemo, demoResetPaused, demoRedraftUnlocked } from "./demo";
 import { isAppRoute } from "../shared/routes";
 import { APP_NAME } from "../shared/brand";
 
@@ -288,7 +288,8 @@ app.post("/api/churches/:id/draft", requirePastor, async (c) => {
   const ch = await ownedChurch(c, c.req.param("id")!);
   if (!ch) return c.json({ error: "not_found" }, 404);
   // Demo church: whole-season redraft is off so visitors can't spend the shared AI quota or wipe the demo.
-  if (ch.is_demo) return c.json({ error: "demo_locked", message: DEMO_REDRAFT_NOTE }, 403);
+  // Ops can open a short window with app_flags.demo_redraft_until (see docs/ops-demo-redraft.md).
+  if (ch.is_demo && !(await demoRedraftUnlocked(c.env.DB, now(c)))) return c.json({ error: "demo_locked", message: DEMO_REDRAFT_NOTE }, 403);
   const b = await body(c, z.object({ restart: z.boolean().default(false) }));
   if (isResp(b)) return b;
   let state: DraftState | null = ch.draft_json ? JSON.parse(ch.draft_json) : null;

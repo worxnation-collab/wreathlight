@@ -187,3 +187,22 @@ export async function demoResetPaused(db: D1Database, envFlag?: string): Promise
     return false; // table not migrated yet: behave as before (reset runs)
   }
 }
+
+/** Longest window the demo redraft unlock may be set for. */
+export const DEMO_REDRAFT_MAX_MS = 2 * 60 * 60 * 1000;
+/**
+ * Ops-only switch: whole-season redraft of the demo church is allowed only while
+ * app_flags.demo_redraft_until holds an ISO time that is in the future and at most 2 hours away.
+ * Off by default (no row); expires on its own, so judges can't trigger it outside an ops window.
+ */
+export async function demoRedraftUnlocked(db: D1Database, now = new Date()): Promise<boolean> {
+  try {
+    const row = await db.prepare("SELECT value FROM app_flags WHERE key = 'demo_redraft_until'").first<{ value: string }>();
+    const until = row ? Date.parse(row.value) : NaN;
+    if (!Number.isFinite(until)) return false;
+    const left = until - now.getTime();
+    return left > 0 && left <= DEMO_REDRAFT_MAX_MS;
+  } catch {
+    return false;
+  }
+}

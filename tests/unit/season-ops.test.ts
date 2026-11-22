@@ -34,3 +34,19 @@ describe("demo reset pause switch", () => {
     expect(await demoResetPaused(fakeDb(null), "true")).toBe(true);
   });
 });
+
+import { demoRedraftUnlocked } from "../../src/worker/demo";
+describe("demo redraft unlock (ops-only, off by default)", () => {
+  const NOW = new Date("2026-11-22T17:00:00Z");
+  it("is locked with no flag, a bad value, a past time, or a window over 2 hours", async () => {
+    expect(await demoRedraftUnlocked(fakeDb(null), NOW)).toBe(false);
+    expect(await demoRedraftUnlocked(fakeDb(null, true), NOW)).toBe(false);
+    expect(await demoRedraftUnlocked(fakeDb("1"), NOW)).toBe(false);
+    expect(await demoRedraftUnlocked(fakeDb("2026-11-22T16:59:00Z"), NOW)).toBe(false);
+    expect(await demoRedraftUnlocked(fakeDb("2026-11-22T19:01:00Z"), NOW)).toBe(false);
+  });
+  it("is unlocked only inside a short future window", async () => {
+    expect(await demoRedraftUnlocked(fakeDb("2026-11-22T17:30:00Z"), NOW)).toBe(true);
+    expect(await demoRedraftUnlocked(fakeDb("2026-11-22T19:00:00Z"), NOW)).toBe(true);
+  });
+});

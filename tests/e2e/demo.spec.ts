@@ -102,6 +102,18 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   await ep.getByRole("button", { name: "Cambiar a español" }).click();
   await expect(ep.getByText("Nochebuena en la iglesia")).toBeVisible();
   await eve.close();
+
+  // Ops-only unlock: a short app_flags window opens whole-season redraft for the demo; it is locked again without it.
+  const d1 = (sql: string) => execSync(`npx wrangler d1 execute wreathlight-db --local --command "${sql}"`, { stdio: "ignore" });
+  try {
+    d1("INSERT OR REPLACE INTO app_flags (key, value, updated_at) VALUES ('demo_redraft_until', '2026-11-23T01:30:00Z', 'e2e')"); // test clock + 30 min
+    const ok = await page.request.post(`/api/churches/${demo.id}/draft`, { data: {}, headers: { "x-test-now": BEFORE_ADVENT } });
+    expect(ok.status()).toBe(200);
+    expect((await ok.json()).weeks?.length).toBeGreaterThan(0);
+  } finally {
+    d1("DELETE FROM app_flags WHERE key = 'demo_redraft_until'");
+  }
+  expect((await page.request.post(`/api/churches/${demo.id}/draft`, { data: {}, headers: { "x-test-now": BEFORE_ADVENT } })).status()).toBe(403);
 });
 
 test("a Spanish-language phone opens the family view in Spanish", async ({ browser }) => {
