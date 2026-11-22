@@ -116,3 +116,17 @@ test("a Spanish-language phone opens the family view in Spanish", async ({ brows
   await expect(page.getByRole("button", { name: "Cambiar a español" })).toBeVisible();
   await ctx.close();
 });
+
+test("unknown URLs get a friendly 404 page with status 404; app routes and files still load", async ({ page, request }) => {
+  const r = await page.goto("/this-page-does-not-exist");
+  expect(r?.status()).toBe(404);
+  await expect(page.getByRole("heading", { name: "This page isn't here" })).toBeVisible();
+  await page.getByRole("link", { name: "Go to Wreathlight" }).click();
+  await expect(page.getByRole("heading", { name: "Try the live demo" })).toBeVisible();
+  for (const p of ["/", "/j/HOPE25", "/c/HOPE25/wreath", "/ai", "/studio", "/studio/new", "/print/demo-hope-creek/booklet", "/favicon.svg", "/robots.txt"])
+    expect((await request.get(p)).status(), p).toBe(200);
+  expect((await request.get("/missing-image.png")).status()).toBe(404);
+  expect((await request.get("/api/nope")).status()).toBe(404);
+  const js = (await (await request.get("/")).text()).match(/\/assets\/index-[^"]+\.js/)![0];
+  expect((await request.get(js)).status()).toBe(200);
+});

@@ -1,12 +1,14 @@
 import { lazy, Suspense } from "react";
 import { usePath } from "./router";
 import { Home } from "./pages/Home";
+import { isAppRoute } from "../shared/routes";
 
 const Studio = lazy(() => import("./pages/Studio"));
 const Family = lazy(() => import("./pages/Family"));
 const WreathView = lazy(() => import("./pages/WreathView"));
 const HowAI = lazy(() => import("./pages/HowAI"));
 const Print = lazy(() => import("./pages/Print"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 export function App() {
   const path = usePath();
@@ -18,6 +20,7 @@ export function App() {
   else if (path.startsWith("/studio")) page = <Studio />;
   else if (path === "/ai") page = <HowAI />;
   else if ((m = path.match(/^\/print\/([A-Za-z0-9-]{1,64})\/(booklet|fridge|insert)$/))) page = <Print churchId={m[1]} kind={m[2] as "booklet" | "fridge" | "insert"} />;
-  else page = <Home />;
+  else if (path === "/" || isAppRoute(path)) page = <Home />;
+  else page = <NotFound />;
   return <Suspense fallback={<div className="wrap" aria-busy="true" />}>{page}</Suspense>;
 }

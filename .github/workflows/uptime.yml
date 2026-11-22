@@ -4,7 +4,9 @@ name: Uptime
 # Worker or D1 is down; GitHub notifies the repo's watchers. Free on public repos.
 on:
   schedule:
-    - cron: "7,37 * * * *"
+    # Off the top of the hour (GitHub drops/delays busy-minute schedules). Edited 2026-11-22 to re-register
+    # the schedule, which never fired after the first merge.
+    - cron: "11,41 * * * *"
   workflow_dispatch:
 
 permissions:

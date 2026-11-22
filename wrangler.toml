@@ -12,7 +12,8 @@ preview_urls = false
 directory = "./dist/client"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
-run_worker_first = ["/api/*"]
+# The Worker sees everything except hashed build assets, so unknown paths can return a real 404.
+run_worker_first = ["/*", "!/assets/*"]
 
 [[d1_databases]]
 binding = "DB"

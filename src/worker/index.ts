@@ -13,6 +13,7 @@ import { validateNight, numbersMatch, type ValidationResult } from "../shared/va
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
 import { resetDemo, demoResetPaused } from "./demo";
+import { isAppRoute } from "../shared/routes";
 import { APP_NAME } from "../shared/brand";
 
 useShingleData(shingles);
@@ -545,6 +546,22 @@ app.get("/api/public/:code/wreath", async (c) => {
 
 app.get("/api/health", (c) => c.json({ ok: true, app: APP_NAME, aiEnabled: c.env.AI_ENABLED !== "false" }));
 app.all("/api/*", (c) => c.json({ error: "not_found" }, 404));
+// Everything else: app routes and static files come from the assets; unknown paths get the SPA's
+// friendly 404 page with a real 404 status (hashed /assets/* never reach the Worker; see wrangler.toml).
+app.on(["GET", "HEAD"], "*", async (c) => {
+  const url = new URL(c.req.url);
+  if (isAppRoute(url.pathname)) return c.env.ASSETS.fetch(c.req.raw);
+  if (/\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.endsWith(".html")) {
+    const r = await c.env.ASSETS.fetch(c.req.raw);
+    // a missing file falls back to index.html under SPA handling; that is a 404, not the file
+    if (r.ok && !(r.headers.get("content-type") ?? "").includes("text/html")) return r;
+  }
+  const index = await c.env.ASSETS.fetch(new Request(new URL("/", url), { headers: c.req.raw.headers }));
+  const headers = new Headers(index.headers);
+  headers.delete("etag");
+  headers.set("cache-control", "no-store");
+  return new Response(c.req.method === "HEAD" ? null : index.body, { status: 404, headers });
+});
 app.onError((err, c) => {
   console.error("error", err.message); // never log bodies or secrets
   return c.json({ error: "server_error" }, 500);
