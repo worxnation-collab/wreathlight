@@ -1,0 +1,29 @@
+name = "wreathlight"
+main = "src/worker/index.ts"
+compatibility_date = "2026-11-01"
+
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wreathlight"
+# Forge: replace with the real id from `wrangler d1 create wreathlight`
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["0 * * * *"]
+
+[vars]
+AI_ENABLED = "true"
+GEMINI_MODEL = "gemini-flash-latest"
+GEMINI_FALLBACK_MODEL = "gemini-flash-lite-latest"
+MAX_AI_CALLS_PER_CHURCH_PER_DAY = "20"
+MAX_AI_CALLS_GLOBAL_PER_DAY = "300"
+
+# Secrets (never in this file): GEMINI_API_KEY, SESSION_SECRET
+# Local development: copy .dev.vars.example to .dev.vars
