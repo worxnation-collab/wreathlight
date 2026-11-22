@@ -65,6 +65,11 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   await page.getByRole("tab", { name: "Dashboard", exact: true }).click();
   await expect(page.getByText(/Demo: families see Night 1 early/)).toBeVisible();
   await expect(page.getByText("Demo data", { exact: true })).toHaveCount(1);
+  // Print views open for the demo church (its id is not a UUID).
+  await page.goto("/print/demo-hope-creek/booklet");
+  await expect(page.getByRole("heading", { name: /Night 1 · Sunday, November 29/ })).toBeVisible();
+  await page.goto("/print/demo-hope-creek/fridge");
+  await expect(page.getByRole("heading", { name: "Our Advent Wreath" })).toBeVisible();
   const me = await (await page.request.get("/api/me")).json();
   const demo = me.churches.find((c: { code: string }) => c.code === "HOPE25");
   const r = await page.request.post(`/api/churches/${demo.id}/draft`, { data: {} });

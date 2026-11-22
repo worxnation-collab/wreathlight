@@ -134,3 +134,16 @@ describe("helpers", () => {
     expect(numbersMatch("This week 70 households lit 241 candles.", [63, 241]).ok).toBe(false);
   });
 });
+
+describe("Spanish 'santa' means holy", () => {
+  it("does not flag 'noche santa' or 'la Santa Biblia' in Spanish", () => {
+    const e = { ...es(), why: "En esta noche santa, leemos la Santa Biblia y recordamos que la luz viene." };
+    const r = validateNight({ ...good(), es: e } as never, ctx({ spanish: true }));
+    expect(codes(r)).not.toContain("SANTA");
+  });
+  it("still flags Santa Claus / Papá Noel in Spanish and Santa in English", () => {
+    const e = { ...es(), why: "Papá Noel no es el centro; la luz viene." };
+    expect(codes(validateNight({ ...good(), es: e } as never, ctx({ spanish: true })))).toContain("SANTA");
+    expect(codes(validateNight({ ...good(), why: "Santa is coming, but light is coming first." }, ctx()))).toContain("SANTA");
+  });
+});

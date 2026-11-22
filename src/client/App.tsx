@@ -17,7 +17,7 @@ export function App() {
   else if ((m = path.match(/^\/c\/([A-Za-z0-9]{4,8})\/wreath\/?$/))) page = <WreathView code={m[1].toUpperCase()} />;
   else if (path.startsWith("/studio")) page = <Studio />;
   else if (path === "/ai") page = <HowAI />;
-  else if ((m = path.match(/^\/print\/([a-f0-9-]{36})\/(booklet|fridge|insert)$/))) page = <Print churchId={m[1]} kind={m[2] as "booklet" | "fridge" | "insert"} />;
+  else if ((m = path.match(/^\/print\/([A-Za-z0-9-]{1,64})\/(booklet|fridge|insert)$/))) page = <Print churchId={m[1]} kind={m[2] as "booklet" | "fridge" | "insert"} />;
   else page = <Home />;
   return <Suspense fallback={<div className="wrap" aria-busy="true" />}>{page}</Suspense>;
 }
