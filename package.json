@@ -1,37 +1,60 @@
 {
   "name": "wreathlight",
-  "version": "0.1.0",
   "private": true,
-  "description": "Wreathlight: a free nightly family Advent practice for churches.",
-  "license": "MIT",
+  "version": "0.1.0",
   "type": "module",
-  "engines": {
-    "node": ">=20"
-  },
+  "license": "MIT",
   "scripts": {
-    "dev": "wrangler dev",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "dev": "npm run build:client && wrangler dev --local",
+    "dev:client": "vite",
+    "build": "npm run build:client",
+    "build:client": "vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "import-bible": "tsx scripts/import-bible.ts && tsx scripts/build-shingles.ts",
+    "db:migrate:local": "wrangler d1 migrations apply wreathlight-db --local",
+    "seed:demo:local": "tsx scripts/seed-demo.ts --local",
+    "lint": "eslint .",
     "test:e2e": "playwright test",
     "guard": "bash scripts/check-no-verse-arcade.sh",
     "check": "npm run typecheck && npm run lint && npm run test && npm run guard",
-    "deploy": "wrangler deploy",
-    "db:migrate:local": "wrangler d1 migrations apply wreathlight-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply wreathlight-db --remote"
+    "deploy": "npm run build:client && wrangler deploy",
+    "db:migrate:remote": "wrangler d1 migrations apply wreathlight-db --remote",
+    "seed:demo:remote": "tsx scripts/seed-demo.ts --remote"
+  },
+  "dependencies": {
+    "hono": "^4.13.19",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261121.1",
     "@eslint/js": "^10.0.1",
+    "@fontsource/fraunces": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
     "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
     "eslint": "^10.0.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.73.0",
-    "vitest": "^5.1.1",
+    "vite": "^8.3.8",
+    "vitest": "^4.1.12",
     "wrangler": "^4.166.0"
   },
+  "description": "Wreathlight: a free nightly family Advent practice for churches.",
+  "engines": {
+    "node": ">=20"
+  },
   "allowScripts": {
-    "esbuild@0.28.2": true,
-    "workerd@1.20261119.1": true
+    "esbuild": true,
+    "workerd": true
   }
 }

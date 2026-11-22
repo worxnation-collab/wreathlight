@@ -1,0 +1,7 @@
+# Exact phrases the no-verse-arcade guard allows, one per line: <path>|<exact phrase>
+# Only the labeled, off-switchable "Keep going" card may mention the pre-existing app (spec rule 0.2).
+# README.md is exempt as a whole (it carries the required pre-existing-work disclosure).
+src/shared/brand.ts|https://versearcade.org/?ref=wreathlight
+src/client/i18n.ts|Verse Arcade, a Bible game for families by the same builder, made before this hackathon
+src/client/i18n.ts|Verse Arcade, un juego bíblico para familias del mismo creador, hecho antes de este hackathon
+src/client/pages/Studio.tsx|The card also lists Verse Arcade, a separate Bible game by the same builder, made before this hackathon.

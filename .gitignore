@@ -5,6 +5,8 @@ node_modules/
 dist/
 .wrangler/
 .vite/
+.cache/
+/tmp/
 
 # local secrets (never commit)
 .dev.vars
