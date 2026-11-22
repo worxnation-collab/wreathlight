@@ -118,7 +118,7 @@ export default function Family({ code: initialCode }: { code: string }) {
             <Link to="/" className="brand" style={{ color: "#fff7e6" }}>Wreathlight</Link>
             {LangBtn}
           </div>
-          <Wreath candleColors={["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={0} christLit={false} title="Advent wreath" />
+          <Wreath candleColors={["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={0} christLit={false} title={lang === "es" ? "Corona de Adviento" : "Advent wreath"} lang={lang} />
           <h1 style={{ fontSize: "1.8rem" }}>{data ? data.church.name : t.join_title}</h1>
           {data?.church.is_demo && <p><span className="pill demo">{t.demo}</span></p>}
           <form onSubmit={join} className="fcard" style={{ display: "grid", gap: 4 }}>
@@ -151,7 +151,7 @@ export default function Family({ code: initialCode }: { code: string }) {
     return (
       <main className="phones" aria-live="polite">
         <div>
-          <Wreath candleColors={ch.candles.map((c) => c.color)} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={t.our_wreath}
+          <Wreath candleColors={ch.candles.map((c) => c.color)} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={t.our_wreath} lang={lang}
             ring={Array.from({ length: ch.season_length }, (_, i) => ({ night: i + 1, glow: lit.includes(i + 1) }))} justLit={justLit} />
           <h2>{t.phones_title}</h2>
           <p style={{ fontSize: "1.2rem" }}>{t.phones_body}</p>
@@ -183,7 +183,7 @@ export default function Family({ code: initialCode }: { code: string }) {
           {ch.is_demo && <span className="pill demo">{t.demo}</span>}
           {data.preview && <span className="pill">{t.preview}</span>}
         </div>
-        <Wreath candleColors={ch.candles.map((c) => c.color)} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={t.our_wreath}
+        <Wreath candleColors={ch.candles.map((c) => c.color)} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={t.our_wreath} lang={lang}
           ring={seasonDates.map((d) => ({ night: d.night, glow: lit.includes(d.night), label: `${t.night} ${d.night} ${lit.includes(d.night) ? t.lit : t.missed}` }))} justLit={justLit} />
         <section className="fcard" aria-labelledby="tonight-h" style={{ marginBottom: 16 }}>
           <h2 id="tonight-h" style={{ fontSize: "1.4rem" }}>{t.tonight}{data.tonight ? ` · ${t.night} ${data.tonight}` : ""}</h2>
