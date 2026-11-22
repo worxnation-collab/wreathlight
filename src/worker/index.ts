@@ -2,7 +2,7 @@ import { Hono, type Context } from "hono";
 import { z } from "zod";
 import type { Env } from "./env";
 import { endSession, hashPassword, ipHash, rateLimit, sessionPastorId, startSession, verifyPassword } from "./auth";
-import { churchCode, nowIso, sha256Hex, stableJson, uuid } from "./util";
+import { churchCode, nowIso, sameNightContent, sha256Hex, stableJson, uuid } from "./util";
 import { geminiClient, mockClient, type AiClient } from "./ai";
 import { draftWeek, starterFor } from "./draft";
 import {
@@ -353,6 +353,12 @@ app.patch("/api/nights/:id", requirePastor, async (c) => {
     es: (b.es as Prose | undefined) ?? cur.es,
   };
   const r = await revalidate(c, o.ch, o.n.night, next);
+  // "Save and re-check" with nothing changed: refresh the checks only. No edited label, approval untouched.
+  if (sameNightContent(cur, next)) {
+    const checks = { ok: r.ok, issues: r.issues, checks: r.checks, attempts: [] };
+    await c.env.DB.prepare("UPDATE nights SET checks_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(checks), nowIso(), o.n.id).run();
+    return c.json(await reload(c, o.n.id));
+  }
   // any edit re-runs checks and un-approves the night
   await writeNight(c.env.DB, o.ch.id, { night: o.n.night, date: o.n.date, source: o.n.source, model: o.n.model, content: next, result: r, edited: true });
   return c.json(await reload(c, o.n.id));

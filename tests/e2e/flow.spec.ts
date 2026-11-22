@@ -50,6 +50,16 @@ test("pastor: sign up, create, draft 27 nights, approve one at a time; edit un-a
   await n1.getByRole("button", { name: "Save and re-check" }).click();
   const pub2 = await (await page.request.get(`/api/public/${code}`, { headers: { "x-test-now": TODAY } })).json();
   expect(pub2.nights.map((n: any) => n.night)).toEqual([2]);
+
+  // "Save and re-check" with nothing changed: stays approved, no "edited" label
+  const n2 = page.locator("article", { has: page.getByRole("heading", { name: /^Night 2 ·/ }) });
+  await page.getByRole("button", { name: "All" }).click();
+  await n2.getByRole("button", { name: "Edit" }).click();
+  await n2.getByRole("button", { name: "Save and re-check" }).click();
+  await expect(n2.getByRole("button", { name: "Save and re-check" })).toHaveCount(0);
+  await expect(n2.getByText(/, edited/)).toHaveCount(0);
+  const pub3 = await (await page.request.get(`/api/public/${code}`, { headers: { "x-test-now": TODAY } })).json();
+  expect(pub3.nights.map((n: any) => n.night)).toEqual([2]);
 });
 
 test("family: 360px phone, join → tonight → 4 steps → hold to light → phones down in ≤ 6 taps; nickname never sent", async ({ browser }) => {
