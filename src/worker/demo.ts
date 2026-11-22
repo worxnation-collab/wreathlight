@@ -173,3 +173,17 @@ export async function resetDemo(db: D1Database, now = new Date()): Promise<numbe
   await db.batch(stmts.map((x) => db.prepare(x.sql).bind(...x.params)));
   return stmts.length;
 }
+
+/**
+ * Ops switch for the hourly demo reset. Paused when the DEMO_RESET_PAUSED var is "1"/"true",
+ * or when D1 has app_flags.demo_reset_paused = '1' (flip with `wrangler d1 execute`, no deploy needed).
+ */
+export async function demoResetPaused(db: D1Database, envFlag?: string): Promise<boolean> {
+  if (envFlag === "1" || envFlag?.toLowerCase() === "true") return true;
+  try {
+    const row = await db.prepare("SELECT value FROM app_flags WHERE key = 'demo_reset_paused'").first<{ value: string }>();
+    return row?.value === "1";
+  } catch {
+    return false; // table not migrated yet: behave as before (reset runs)
+  }
+}

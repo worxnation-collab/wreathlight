@@ -71,6 +71,23 @@ Worker secrets (`SESSION_SECRET`, `GEMINI_API_KEY`) are set once with `wrangler 
 The hourly cron restores it from `demo_snapshot` (captured with `npm run seed:demo:remote -- --capture` after a real
 pipeline run), or from the Starter Plan until a snapshot exists. Households are anonymous synthetic hashes; no names.
 
+On the demo church, "Redraft unapproved nights" is off (the API answers 403 `demo_locked`) so visitors can't spend the
+shared Gemini quota; single-night "Regenerate" still works within the per-church daily cap.
+
+**Pausing the hourly reset** (e.g. while approving nights before a `--capture`). No deploy needed:
+
+```bash
+# pause
+npx wrangler d1 execute wreathlight-db --remote --command \
+  "INSERT OR REPLACE INTO app_flags (key, value, updated_at) VALUES ('demo_reset_paused', '1', datetime('now'))"
+# resume
+npx wrangler d1 execute wreathlight-db --remote --command "DELETE FROM app_flags WHERE key = 'demo_reset_paused'"
+# check
+npx wrangler d1 execute wreathlight-db --remote --command "SELECT * FROM app_flags"
+```
+
+Setting the `DEMO_RESET_PAUSED = "1"` var also pauses it (needs a deploy). Purges still run while paused.
+
 ## Structure
 
 ```

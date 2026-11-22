@@ -12,7 +12,7 @@ import { SEASONS, TRADITIONS, TRANSLATIONS, seasonNights, todayIn, weekOf, ADVEN
 import { validateNight, numbersMatch, type ValidationResult } from "../shared/validator";
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
-import { resetDemo } from "./demo";
+import { resetDemo, demoResetPaused } from "./demo";
 import { APP_NAME } from "../shared/brand";
 
 useShingleData(shingles);
@@ -173,9 +173,13 @@ app.post("/api/auth/login", async (c) => {
   return c.json({ id: p.id, email: b.email, display_name: p.display_name });
 });
 app.post("/api/auth/logout", (c) => { endSession(c); return c.json({ ok: true }); });
-app.get("/api/me", requirePastor, async (c) => {
+// Signed-out is a normal state for the Studio, so it answers 200 with null instead of a 401 (no console errors).
+app.get("/api/me", async (c) => {
+  const pid = await sessionPastorId(c);
+  if (!pid) return c.json(null);
+  c.set("pastorId", pid);
   const p = await c.env.DB.prepare("SELECT id, email, display_name FROM pastors WHERE id = ?").bind(c.get("pastorId")).first();
-  if (!p) return c.json({ error: "signed_out" }, 401);
+  if (!p) return c.json(null);
   const { results } = await c.env.DB.prepare(
     "SELECT ch.* FROM churches ch JOIN church_admins a ON a.church_id = ch.id WHERE a.pastor_id = ? ORDER BY ch.created_at",
   ).bind(c.get("pastorId")).all<ChurchRow>();
@@ -278,9 +282,12 @@ async function runDraftStep(c: C, ch: ChurchRow, state: DraftState): Promise<Dra
   if (state.weeks.every((w) => w.status === "done")) { state.status = "done"; state.finished_at = nowIso(); }
   return state;
 }
+const DEMO_REDRAFT_NOTE = "Redrafting the whole season is turned off for the demo church. Try “Regenerate this night” on any single night instead.";
 app.post("/api/churches/:id/draft", requirePastor, async (c) => {
   const ch = await ownedChurch(c, c.req.param("id")!);
   if (!ch) return c.json({ error: "not_found" }, 404);
+  // Demo church: whole-season redraft is off so visitors can't spend the shared AI quota or wipe the demo.
+  if (ch.is_demo) return c.json({ error: "demo_locked", message: DEMO_REDRAFT_NOTE }, 403);
   const b = await body(c, z.object({ restart: z.boolean().default(false) }));
   if (isResp(b)) return b;
   let state: DraftState | null = ch.draft_json ? JSON.parse(ch.draft_json) : null;
@@ -394,7 +401,9 @@ async function weekStats(db: D1Database, ch: ChurchRow, today: string) {
 app.get("/api/churches/:id/dashboard", requirePastor, async (c) => {
   const ch = await ownedChurch(c, c.req.param("id")!);
   if (!ch) return c.json({ error: "not_found" }, 404);
-  const today = todayIn(ch.tz, now(c));
+  const realToday = todayIn(ch.tz, now(c));
+  // Demo church before Advent: dashboard shows the first night, consistent with the family view.
+  const today = ch.is_demo && realToday < ch.season_start ? ch.season_start : realToday;
   const joined = await c.env.DB.prepare("SELECT COUNT(*) AS n FROM households WHERE church_id = ?").bind(ch.id).first<{ n: number }>();
   const { results } = await c.env.DB.prepare("SELECT night, COUNT(*) AS n FROM lights WHERE church_id = ? GROUP BY night").bind(ch.id).all<{ night: number; n: number }>();
   const per = new Map(results.map((r) => [r.night, r.n]));
@@ -460,21 +469,25 @@ app.get("/api/public/:code", async (c) => {
   if (!ch) return c.json({ error: "not_found" }, 404);
   const today = todayIn(ch.tz, now(c));
   const preview = !!ch.is_demo && c.req.query("preview") === "1";
+  // Demo church only: before Advent starts, Night 1 opens early so judges and visitors can try the family flow.
+  const demoEarly = !!ch.is_demo && today < ch.season_start;
+  const visibleUpTo = demoEarly ? ch.season_start : today;
   // Approved only. Future nights never leave the server unless this is the demo church in preview mode.
   const { results } = await c.env.DB.prepare(
     preview ? "SELECT * FROM nights WHERE church_id = ? AND status = 'approved' ORDER BY night" : "SELECT * FROM nights WHERE church_id = ? AND status = 'approved' AND date <= ? ORDER BY night",
-  ).bind(...(preview ? [ch.id] : [ch.id, today])).all<NightRow>();
+  ).bind(...(preview ? [ch.id] : [ch.id, visibleUpTo])).all<NightRow>();
   const season = seasonNights(ch.season_start, ch.season_end);
-  const tonight = season.find((n) => n.date === today)?.night ?? null;
+  const tonight = demoEarly ? 1 : season.find((n) => n.date === today)?.night ?? null;
   return c.json({
     church: {
       code: ch.code, name: ch.name, city: ch.city ?? "", pastor_display_name: ch.pastor_display_name, tradition: ch.tradition,
       candles: TRADITIONS[ch.tradition].candles, translation: TRANSLATIONS[ch.translation], spanish_on: !!ch.spanish_on, ai_on: !!ch.ai_on && c.env.AI_ENABLED !== "false",
       xmas_eve_times: ch.xmas_eve_times ?? "", is_demo: !!ch.is_demo,
-      keep_going: ch.keep_going_on ? { church_url: ch.keep_going_church_url ?? "" } : null,
+      // "Keep going" card appears from Christmas Day on, in every mode (including demo preview).
+      keep_going: ch.keep_going_on && today >= CHRISTMAS ? { church_url: ch.keep_going_church_url ?? "" } : null,
       season_start: ch.season_start, season_end: ch.season_end, season_length: season.length,
     },
-    today, tonight, preview, after_christmas: today > CHRISTMAS,
+    today, tonight, preview, demo_early: demoEarly, after_christmas: today > CHRISTMAS,
     nights: results.map((n) => publicNight(n, ch)),
   });
 });
@@ -509,7 +522,9 @@ app.post("/api/public/:code/light", async (c) => {
 app.get("/api/public/:code/wreath", async (c) => {
   const ch = await publicChurch(c);
   if (!ch) return c.json({ error: "not_found" }, 404);
-  const today = todayIn(ch.tz, now(c));
+  const realToday = todayIn(ch.tz, now(c));
+  // Demo church before Advent: show the wreath as it will look on the first Sunday (matches Night 1 opening early).
+  const today = ch.is_demo && realToday < ch.season_start ? ch.season_start : realToday;
   const ws = await weekStats(c.env.DB, ch, today);
   const { results } = await c.env.DB.prepare("SELECT night, COUNT(*) AS n FROM lights WHERE church_id = ? GROUP BY night").bind(ch.id).all<{ night: number; n: number }>();
   const per = new Map(results.map((r) => [r.night, r.n]));
@@ -537,6 +552,8 @@ export default {
     await env.DB.prepare("UPDATE ai_runs SET prompt_text = NULL WHERE created_at < ? AND prompt_text IS NOT NULL").bind(cutoff).run();
     await env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(new Date(Date.now() - 2 * 86400000).toISOString()).run();
     // Hourly demo-church reset to its seed (same statements as scripts/seed-demo.ts).
+    // Paused via DEMO_RESET_PAUSED or app_flags.demo_reset_paused (e.g. while capturing a new snapshot).
+    if (await demoResetPaused(env.DB, env.DEMO_RESET_PAUSED)) { console.log("demo reset paused"); return; }
     await resetDemo(env.DB);
   },
 };

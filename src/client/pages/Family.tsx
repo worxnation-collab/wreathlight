@@ -5,6 +5,7 @@ import { Wreath } from "../components/Wreath";
 import { Globe, Lock, Share } from "../components/Icons";
 import { Link, navigate } from "../router";
 import { KEEP_GOING_URL } from "../../shared/brand";
+import { CHRISTMAS } from "../../shared/season";
 
 interface PubNight {
   night: number; date: string; week: number; reference: string; verse_en: string; translation: string; why: string;
@@ -15,7 +16,7 @@ interface PubNight {
 interface Pub {
   church: { code: string; name: string; pastor_display_name: string; candles: { en: string; es: string; color: string }[]; translation: { name: string; short: string };
     spanish_on: boolean; xmas_eve_times: string; is_demo: boolean; keep_going: null | { church_url: string }; season_start: string; season_end: string; season_length: number };
-  today: string; tonight: number | null; preview: boolean; after_christmas: boolean; nights: PubNight[];
+  today: string; tonight: number | null; preview: boolean; demo_early?: boolean; after_christmas: boolean; nights: PubNight[];
 }
 
 const ls = {
@@ -187,7 +188,8 @@ export default function Family({ code: initialCode }: { code: string }) {
           ring={seasonDates.map((d) => ({ night: d.night, glow: lit.includes(d.night), label: `${t.night} ${d.night} ${lit.includes(d.night) ? t.lit : t.missed}` }))} justLit={justLit} />
         <section className="fcard" aria-labelledby="tonight-h" style={{ marginBottom: 16 }}>
           <h2 id="tonight-h" style={{ fontSize: "1.4rem" }}>{t.tonight}{data.tonight ? ` · ${t.night} ${data.tonight}` : ""}</h2>
-          {data.today < ch.season_start && !data.preview ? <p>{t.before(fmtDate(ch.season_start, lang, { weekday: "long", month: "long", day: "numeric" }))}</p>
+          {data.demo_early && <p className="small muted" style={{ marginTop: -4 }}>{t.demo_early(fmtDate(ch.season_start, lang, { weekday: "long", month: "long", day: "numeric" }))}</p>}
+          {data.today < ch.season_start && !data.preview && !tonight ? <p>{t.before(fmtDate(ch.season_start, lang, { weekday: "long", month: "long", day: "numeric" }))}</p>
             : tonight ? (lit.includes(tonight.night) ? <p>{t.lit_already} {t.phones_title}</p>
               : <button className="btn btn-gold" style={{ width: "100%", minHeight: 56 }} onClick={() => setView({ kind: "card", night: tonight.night })}>{t.read} · {t.talk} · {t.pray} · {t.do}</button>)
               : <p>{t.no_tonight}</p>}
@@ -213,7 +215,7 @@ export default function Family({ code: initialCode }: { code: string }) {
             })}
           </div>
         </section>
-        {ch.keep_going && (data.after_christmas || data.preview) && (
+        {ch.keep_going && data.today >= CHRISTMAS && (
           <section className="fcard" style={{ marginTop: 16 }}>
             <h2 style={{ fontSize: "1.3rem" }}>{t.keep_title}</h2>
             <ul style={{ paddingLeft: 18, display: "grid", gap: 10 }}>
@@ -261,8 +263,8 @@ function NightCard({ n, lang, t, LangBtn, candle, xmas, alreadyLit, onBack, onLi
           {LangBtn}
         </div>
         <p className="muted small" style={{ margin: "0 0 6px" }}>
-          {t.night} {n.night} · {fmtDate(n.date, lang, { weekday: "long", month: "long", day: "numeric" })} · {t.week_candle(candle)}
-          {demo && <> · <span className="pill demo">{t.demo}</span></>}
+          {t.night} {n.night} · {fmtDate(n.date, lang, { weekday: "long", month: "long", day: "numeric" })} · {n.date === CHRISTMAS ? t.christmas_day : t.week_candle(candle)}
+          {demo && <> <span className="pill demo" style={{ marginLeft: 4, verticalAlign: "middle" }}>{t.demo}</span></>}
         </p>
         <article className="fcard" aria-live="polite">
           <nav className="steps" aria-label="Steps">

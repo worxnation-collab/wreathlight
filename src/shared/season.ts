@@ -72,3 +72,9 @@ export function weekOf(date: string): number {
 export function todayIn(tz: string, now: Date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
 }
+/** Label for a night's place in the season: the Advent candle week, or Christmas on Dec 25. */
+export function seasonLabel(date: string, tradition: TraditionKey, lang: "en" | "es"): string {
+  if (date === CHRISTMAS) return lang === "es" ? "Navidad" : "Christmas";
+  const c = TRADITIONS[tradition].candles[weekOf(date) - 1];
+  return lang === "es" ? `Semana de ${c.es}` : `${c.en} week`;
+}
