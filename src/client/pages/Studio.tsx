@@ -491,10 +491,15 @@ function EditNight({ n, ch, onCancel, onSaved }: { n: Night; ch: Church; onCance
 function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; today: string }) {
   const [d, setD] = useState<any>(null);
   const [ann, setAnn] = useState<any>(null);
+  const [annBusy, setAnnBusy] = useState(false);
+  const [annErr, setAnnErr] = useState("");
   const [copied, setCopied] = useState(false);
   useEffect(() => { api(`/api/churches/${ch.id}/dashboard`).then(setD).catch(() => {}); }, [ch.id]);
   if (!d) return <p className="muted" aria-busy="true">Loading…</p>;
-  const tonight = nights.find((n) => n.date === today);
+  // The server's dashboard date (the demo church opens Night 1 early, like the family view).
+  const day: string = d.today ?? today;
+  const demoEarly = !!d.is_demo && day !== today;
+  const tonight = nights.find((n) => n.date === day && n.status === "approved");
   const max = Math.max(5, ...d.nights.map((n: any) => n.lit.value ?? 0));
   const slide = () => {
     const c = document.createElement("canvas");
@@ -538,12 +543,21 @@ function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; toda
             <button className="btn btn-primary btn-small" onClick={async () => { await navigator.clipboard.writeText(ann.text); setCopied(true); }}>{copied ? "Copied" : "Approve and copy"}</button>
             <button className="btn btn-ghost btn-small" onClick={slide}>Download slide (PNG)</button>
           </div>
-        </> : <button className="btn btn-ghost" onClick={async () => setAnn(await api(`/api/churches/${ch.id}/announcement`, { body: {} }))}>Draft this Sunday's announcement</button>}
+        </> : <>
+          <button className="btn btn-ghost" disabled={annBusy} aria-busy={annBusy} onClick={async () => {
+            setAnnBusy(true); setAnnErr("");
+            try { setAnn(await api(`/api/churches/${ch.id}/announcement`, { body: {} })); }
+            catch (e: any) { setAnnErr(e?.message || "Something went wrong. Please try again."); }
+            finally { setAnnBusy(false); }
+          }}>{annBusy ? "Drafting… (about 15 seconds)" : "Draft this Sunday's announcement"}</button>
+          {annErr && <p className="error" role="alert">{annErr}</p>}
+        </>}
       </section>
       <section className="card">
         <h2>Tonight's card</h2>
+        {demoEarly && tonight && <p className="small muted">Demo: families see Night 1 early, before Advent begins on {fmtDate(ch.season_start, "en")}.</p>}
         {tonight ? <ProseView p={tonight} verse={tonight.verse_en} reference={tonight.reference} translation={TRANSLATIONS[ch.translation as "bsb"].short} />
-          : <p className="muted">No night is scheduled for today ({fmtDate(today, "en")}). The season runs {fmtDate(ch.season_start, "en")} to {fmtDate(ch.season_end, "en")}.</p>}
+          : <p className="muted">No approved night is scheduled for today ({fmtDate(day, "en")}). The season runs {fmtDate(ch.season_start, "en")} to {fmtDate(ch.season_end, "en")}.</p>}
       </section>
       <section className="card">
         <h2>AI activity log</h2>
@@ -553,13 +567,26 @@ function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; toda
     </div>
   );
 }
+/** Plain-English outcome for the AI activity log (raw code kept in the tooltip). */
+export function outcomeLabel(o: string): string {
+  const [kind, status, ...rest] = String(o ?? "").split(":");
+  const n = kind.match(/night-(\d+)$/)?.[1];
+  const what = kind.startsWith("regenerate") ? "Regenerated one night" : kind === "announcement" ? "Worded the announcement"
+    : kind === "starter-plan" ? "Used the Starter Plan" : kind.startsWith("retry-night") ? `Retried night ${n} after a failed check`
+    : kind.startsWith("fallback-night") ? `Backup model redrafted night ${n}` : kind.endsWith("fallback") ? "Backup model drafted the week" : "Drafted the week";
+  if (kind === "starter-plan") return what;
+  if (status === "ok") return `${what} ✓`;
+  const why = rest.join(":");
+  return /timeout|aborted/i.test(why) ? `${what}: timed out, so the backup model took over` : `${what}: failed (${status || "error"}), handled by the fallback`;
+}
 function AiLog({ runs }: { runs: any[] }) {
   if (!runs?.length) return <p className="muted">No AI activity yet.</p>;
+  const when = (iso: string) => new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   return (
     <div style={{ overflowX: "auto" }}>
-      <table className="small" style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead><tr style={{ textAlign: "left" }}><th>Time</th><th>Week</th><th>Model</th><th>Outcome</th><th>ms</th></tr></thead>
-        <tbody>{runs.map((r, i) => <tr key={i} style={{ borderTop: "1px solid var(--line)" }}><td>{new Date(r.created_at).toLocaleString()}</td><td>{r.week}</td><td>{r.model}</td><td>{r.outcome}</td><td>{r.ms}</td></tr>)}</tbody>
+      <table className="small ailog" style={{ width: "100%", borderCollapse: "collapse", minWidth: 520 }}>
+        <thead><tr style={{ textAlign: "left" }}><th>When</th><th>Week</th><th>Model</th><th>What happened</th><th>Time</th></tr></thead>
+        <tbody>{runs.map((r, i) => <tr key={i} style={{ borderTop: "1px solid var(--line)" }}><td>{when(r.created_at)}</td><td>{r.week}</td><td>{r.model}</td><td title={r.outcome}>{outcomeLabel(r.outcome)}</td><td>{(r.ms / 1000).toFixed(1)} s</td></tr>)}</tbody>
       </table>
     </div>
   );

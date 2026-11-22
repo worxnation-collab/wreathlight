@@ -32,7 +32,12 @@ function addDays(iso: string, n: number) { const d = new Date(iso + "T12:00:00Z"
 
 export default function Family({ code: initialCode }: { code: string }) {
   const preview = new URLSearchParams(location.search).get("preview") === "1";
-  const [lang, setLang] = useState<Lang>(() => (ls.get("wl:lang") === "es" ? "es" : "en"));
+  const [lang, setLang] = useState<Lang>(() => {
+    // A saved choice wins; otherwise a Spanish-language phone starts in Spanish.
+    const saved = ls.get("wl:lang");
+    if (saved === "es" || saved === "en") return saved;
+    return typeof navigator !== "undefined" && /^es\b/i.test(navigator.language || "") ? "es" : "en";
+  });
   const t = DICTS[lang];
   const [code, setCode] = useState(initialCode);
   const [data, setData] = useState<Pub | null>(null);
@@ -119,7 +124,7 @@ export default function Family({ code: initialCode }: { code: string }) {
             <Link to="/" className="brand" style={{ color: "#fff7e6" }}>Wreathlight</Link>
             {LangBtn}
           </div>
-          <Wreath candleColors={["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={0} christLit={false} title={lang === "es" ? "Corona de Adviento" : "Advent wreath"} lang={lang} />
+          <Wreath candleColors={data ? data.church.candles.map((c) => c.color) : ["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={lang === "es" ? "Corona de Adviento" : "Advent wreath"} lang={lang} />
           <h1 style={{ fontSize: "1.8rem" }}>{data ? data.church.name : t.join_title}</h1>
           {data?.church.is_demo && <p><span className="pill demo">{t.demo}</span></p>}
           <form onSubmit={join} className="fcard" style={{ display: "grid", gap: 4 }}>

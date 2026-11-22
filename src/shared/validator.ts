@@ -36,7 +36,7 @@ export const CAPS = { talk: 160, pray: 200, do: 220, why: 160 } as const;
 const URL_RE = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|org|net|io|app|dev|co|ly|me)\b)/i;
 const EMAIL_RE = /[^\s@]+@[^\s@]+\.[a-z]{2,}/i;
 
-interface PhraseRule { code: string; label: string; patterns: RegExp[]; when?: (ctx: ValidateContext) => boolean }
+interface PhraseRule { code: string; label: string; patterns: RegExp[]; es?: RegExp[]; when?: (ctx: ValidateContext) => boolean }
 export const PHRASE_RULES: PhraseRule[] = [
   {
     code: "LEGEND_AS_FACT",
@@ -64,7 +64,12 @@ export const PHRASE_RULES: PhraseRule[] = [
       /\bmake you (rich|wealthy)\b/i, /\bprosper financially\b/i, /\bblessed with (money|wealth)\b/i,
     ],
   },
-  { code: "SANTA", label: "mentions Santa", patterns: [/\bsanta\b/i, /\bpap[aá] noel\b/i, /\bnorth pole\b/i, /\belf on the shelf\b/i] },
+  {
+    code: "SANTA", label: "mentions Santa",
+    patterns: [/\bsanta\b/i, /\bpap[aá] noel\b/i, /\bnorth pole\b/i, /\belf on the shelf\b/i],
+    // Spanish "santa" means holy ("noche santa", "la Santa Biblia"), so Spanish text only flags the figure himself.
+    es: [/\bsanta claus\b/i, /\bsanta clos\b/i, /\bpap[aá] noel\b/i, /\bpolo norte\b/i, /\bel duende\b/i],
+  },
   {
     code: "SECRETS_OR_GOING",
     label: "asks kids to keep secrets or go somewhere",
@@ -188,7 +193,8 @@ export function validateNight(n: Pick<ModelNight, "reference" | "why" | "talk" |
       if (q) hard("SCRIPTURE_QUOTE", `${fieldName(field)} quotes Scripture word for word ("${q}…"). Scripture must come from the dataset, not the model.`, field);
       for (const rule of PHRASE_RULES) {
         if (rule.when && !rule.when(ctx)) continue;
-        if (rule.patterns.some((re) => re.test(v))) {
+        const patterns = prefix === "es." && rule.es ? rule.es : rule.patterns;
+        if (patterns.some((re) => re.test(v))) {
           soft(rule.code, `${fieldName(field)} ${rule.label}.`, field);
           res.checks.phrases = false;
         }
