@@ -23,7 +23,7 @@ function secret(env: Env): string {
   if (!env.SESSION_SECRET || env.SESSION_SECRET.length < 16) throw new Error("SESSION_SECRET is not configured");
   return env.SESSION_SECRET;
 }
-export async function startSession(c: Context<{ Bindings: Env }>, pastorId: string) {
+export async function startSession(c: Context<{ Bindings: Env; Variables: any }>, pastorId: string) {
   const payload = b64url(new TextEncoder().encode(JSON.stringify({ pid: pastorId, exp: Date.now() + SESSION_DAYS * 86400000 })));
   const sig = await hmac(secret(c.env), payload);
   const secure = new URL(c.req.url).protocol === "https:";
@@ -31,10 +31,10 @@ export async function startSession(c: Context<{ Bindings: Env }>, pastorId: stri
     httpOnly: true, secure, sameSite: "Lax", path: "/", maxAge: SESSION_DAYS * 86400,
   });
 }
-export function endSession(c: Context<{ Bindings: Env }>) {
+export function endSession(c: Context<{ Bindings: Env; Variables: any }>) {
   deleteCookie(c, SESSION_COOKIE, { path: "/" });
 }
-export async function sessionPastorId(c: Context<{ Bindings: Env }>): Promise<string | null> {
+export async function sessionPastorId(c: Context<{ Bindings: Env; Variables: any }>): Promise<string | null> {
   const raw = getCookie(c, SESSION_COOKIE);
   if (!raw) return null;
   const [payload, sig] = raw.split(".");
@@ -51,7 +51,7 @@ export async function sessionPastorId(c: Context<{ Bindings: Env }>): Promise<st
 }
 
 /** Daily-salted IP hash: SHA-256(ip + DAILY_SALT), DAILY_SALT derived from SESSION_SECRET + date. Raw IPs are never stored. */
-export async function ipHash(c: Context<{ Bindings: Env }>): Promise<string> {
+export async function ipHash(c: Context<{ Bindings: Env; Variables: any }>): Promise<string> {
   const ip = c.req.header("cf-connecting-ip") ?? "local";
   const day = new Date().toISOString().slice(0, 10);
   const dailySalt = await sha256Hex(secret(c.env) + day);
