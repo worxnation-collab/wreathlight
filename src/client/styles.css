@@ -70,6 +70,10 @@ textarea.input { min-height: 72px; resize: vertical; }
 .studio { min-height: 100vh; }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--paper); position: sticky; top: 0; z-index: 5; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--ink); text-decoration: none; }
+.brand img { flex: none; display: block; }
+.brand-inverted { color: #fff7e6; }
+.wordmark-hero { font-size: clamp(36px, 6vw, 64px); color: #fff7e6; gap: 14px; justify-content: center; margin: 0 0 0.5em; }
+.wordmark-hero img { width: 1.05em; height: 1.05em; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
 .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 8px 0 20px; overflow-x: auto; }
@@ -174,7 +178,22 @@ textarea.input { min-height: 72px; resize: vertical; }
   .print-page { page-break-after: always; break-after: page; }
   .print-night { break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #ccc; padding: 10px 0; }
 }
-.projector-wreath { width: min(78vw, 120vh); max-height: 66vh; }
+.projector-stage { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(240px, 0.7fr); gap: clamp(16px, 2.4vw, 40px); align-items: center; width: min(94vw, 1680px); margin: 0 auto; min-height: 0; }
+.painted-wreath { position: relative; border-radius: 18px; overflow: hidden; background: #07140f; box-shadow: 0 16px 50px rgba(0, 0, 0, 0.45); }
+.painted-wreath picture, .painted-wreath img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.painted-wreath video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.7s ease; }
+.painted-wreath video.is-on { opacity: 1; }
+.projector-wreath { width: 100%; max-height: 62vh; }
+.fcard-art { padding-top: 0; overflow: hidden; }
+.week-art { margin: 0 -22px 16px; }
+.week-art img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: center 35%; }
+@media (max-width: 800px) {
+  .projector-stage { grid-template-columns: 1fr; }
+  .projector-wreath { width: min(78vw, 50vh); max-height: 40vh; margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .painted-wreath video { display: none !important; }
+}
 .hero-wreath { width: min(420px, 90vw); }
 .family svg[role="img"] { width: 100%; max-width: 440px; display: block; margin: 0 auto; }
 .phones svg[role="img"] { width: min(320px, 80vw); margin: 0 auto 10px; display: block; }

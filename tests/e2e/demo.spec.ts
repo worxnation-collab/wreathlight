@@ -135,10 +135,17 @@ test("unknown URLs get a friendly 404 page with status 404; app routes and files
   await expect(page.getByRole("heading", { name: "This page isn't here" })).toBeVisible();
   await page.getByRole("link", { name: "Go to Wreathlight" }).click();
   await expect(page.getByRole("heading", { name: "Try the live demo" })).toBeVisible();
-  for (const p of ["/", "/j/HOPE25", "/c/HOPE25/wreath", "/ai", "/studio", "/studio/new", "/print/demo-hope-creek/booklet", "/favicon.svg", "/robots.txt"])
+  for (const p of ["/", "/j/HOPE25", "/c/HOPE25/wreath", "/ai", "/studio", "/studio/new", "/print/demo-hope-creek/booklet", "/favicon.svg", "/robots.txt", "/manifest.webmanifest", "/art/wreath/week-1-1280.webp", "/art/video/week-1-loop.mp4", "/icons/icon-192.png"])
     expect((await request.get(p)).status(), p).toBe(200);
   expect((await request.get("/missing-image.png")).status()).toBe(404);
   expect((await request.get("/api/nope")).status()).toBe(404);
   const js = (await (await request.get("/")).text()).match(/\/assets\/index-[^"]+\.js/)![0];
   expect((await request.get(js)).status()).toBe(200);
+});
+
+test("projector shows the painted wreath beside the accessible SVG", async ({ page }) => {
+  await page.goto("/c/HOPE25/wreath");
+  await expect(page.getByRole("img", { name: "Church Wreath" })).toBeVisible();
+  await expect(page.locator(".painted-wreath img")).toBeVisible();
+  await expect(page.locator(".projector-stage")).toBeVisible();
 });

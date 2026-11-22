@@ -40,7 +40,7 @@ Wreathlight shares no code, data, art or accounts with Verse Arcade (versearcade
 
 ## Data sources and licenses
 
-See [DATA-SOURCES.md](DATA-SOURCES.md). Scripture: Berean Standard Bible, King James Version, World English Bible and Reina-Valera 1909, all public domain, downloaded from their original publishers by `scripts/import-bible.ts`. Fonts: Fraunces and Inter (OFL). Code: MIT.
+See [DATA-SOURCES.md](DATA-SOURCES.md). Scripture: Berean Standard Bible, King James Version, World English Bible and Reina-Valera 1909, all public domain, downloaded from their original publishers by `scripts/import-bible.ts`. Fonts: Fraunces and Inter (OFL). Code: MIT. Painted wreath and week art were generated with Fal and are excluded from the MIT copyright claim; details are in DATA-SOURCES.md.
 
 ## Run locally
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { Wreath } from "../components/Wreath";
+import { PaintedWreath } from "../components/PaintedWreath";
+import { wreathState } from "../../shared/art";
 
 export default function WreathView({ code }: { code: string }) {
   const [d, setD] = useState<any>(null);
@@ -32,7 +34,8 @@ export default function WreathView({ code }: { code: string }) {
         <h1>{d.name}</h1>
         <div className="sub">{d.christ_candle ? "Christ has come. Merry Christmas." : `Advent week ${d.week} · the ${candle} candle`}</div>
       </header>
-      <div style={{ display: "grid", placeItems: "center" }}>
+      <div className="projector-stage">
+        <PaintedWreath state={wreathState(d.week, !!d.christ_candle)} enableVideo />
         <Wreath candleColors={d.candles.map((c: any) => c.color)} sundaysLit={d.sundays_lit} christLit={d.christ_candle} ring={d.ring}
           title="Church Wreath" className="projector-wreath" />
       </div>

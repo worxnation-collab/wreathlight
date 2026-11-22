@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, ApiError } from "../api";
 import { DICTS, fmtDate, type Lang } from "../i18n";
 import { Wreath } from "../components/Wreath";
+import { WeekArt } from "../components/WeekArt";
+import { Wordmark } from "../components/Wordmark";
 import { Globe, Lock, Share } from "../components/Icons";
 import { Link, navigate } from "../router";
 import { KEEP_GOING_URL } from "../../shared/brand";
@@ -121,7 +123,7 @@ export default function Family({ code: initialCode }: { code: string }) {
       <main className="family">
         <div className="wrap">
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 18 }}>
-            <Link to="/" className="brand" style={{ color: "#fff7e6" }}>Wreathlight</Link>
+            <Wordmark inverted />
             {LangBtn}
           </div>
           <Wreath candleColors={data ? data.church.candles.map((c) => c.color) : ["#7b5ea7", "#7b5ea7", "#d77a9c", "#7b5ea7"]} sundaysLit={wreath?.sundays_lit ?? 0} christLit={!!wreath?.christ_candle} title={lang === "es" ? "Corona de Adviento" : "Advent wreath"} lang={lang} />
@@ -271,7 +273,8 @@ function NightCard({ n, lang, t, LangBtn, candle, xmas, alreadyLit, onBack, onLi
           {t.night} {n.night} · {fmtDate(n.date, lang, { weekday: "long", month: "long", day: "numeric" })} · {n.date === CHRISTMAS ? t.christmas_day : t.week_candle(candle)}
           {demo && <> <span className="pill demo" style={{ marginLeft: 4, verticalAlign: "middle" }}>{t.demo}</span></>}
         </p>
-        <article className="fcard" aria-live="polite">
+        <article className="fcard fcard-art" aria-live="polite">
+          <WeekArt week={n.week} christmas={n.date === CHRISTMAS} label={n.date === CHRISTMAS ? (lang === "es" ? "Corona de Navidad" : "Christmas wreath") : (lang === "es" ? `Ilustración de la semana de ${candle}` : `Illustration for ${candle} week`)} />
           <nav className="steps" aria-label="Steps">
             {steps.map((s, i) => (
               <button key={s} aria-current={i === step ? "step" : undefined} onClick={() => setStep(i)}>{s}</button>
