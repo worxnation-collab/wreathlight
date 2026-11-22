@@ -1,0 +1,34 @@
+# Wreathlight Worker. Free plan only (Workers Free + D1 Free). No secrets in this file:
+# GEMINI_API_KEY and SESSION_SECRET are set with `wrangler secret put`.
+name = "wreathlight"
+main = "src/worker/index.ts"
+compatibility_date = "2026-11-19"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# Static client assets (Vite build) get wired here once src/client exists:
+# [assets]
+# directory = "./dist/client"
+# binding = "ASSETS"
+# not_found_handling = "single-page-application"
+# run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wreathlight-db"
+database_id = "dae0718d-7bd9-446e-bf07-8a4f5cad7b9c"
+migrations_dir = "migrations"
+
+[vars]
+# From the public Gemini models + pricing docs on 2026-11-22 (both list a free tier).
+# Re-confirm with ListModels once GEMINI_API_KEY exists.
+GEMINI_MODEL = "gemini-3.8-flash"
+GEMINI_FALLBACK_MODEL = "gemini-3.5-flash-lite"
+AI_ENABLED = "true"
+
+# Hourly: demo-church reset. 08:00 UTC daily: purge ai_runs prompt text older than 7 days.
+[triggers]
+crons = ["0 * * * *", "0 8 * * *"]
+
+[observability]
+enabled = true

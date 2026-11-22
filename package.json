@@ -1,0 +1,37 @@
+{
+  "name": "wreathlight",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wreathlight: a free nightly family Advent practice for churches.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "guard": "bash scripts/check-no-verse-arcade.sh",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run guard",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply wreathlight-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply wreathlight-db --remote"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261121.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "eslint": "^10.0.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.1",
+    "wrangler": "^4.166.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261119.1": true
+  }
+}
