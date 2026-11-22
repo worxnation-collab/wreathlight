@@ -52,6 +52,7 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   const s = await request.post("/api/auth/signup", { data: { email: "demo@wreathlight.app", password: pw, display_name: "Pastor Dana (demo)" } });
   test.skip(s.status() === 409, "demo login already exists in this local DB");
   execSync("npx tsx scripts/seed-demo.ts --local", { stdio: "ignore" });
+  await page.setExtraHTTPHeaders({ "x-test-now": BEFORE_ADVENT });
   await page.goto("/studio");
   await page.getByLabel("Email").fill("demo@wreathlight.app");
   await page.getByLabel("Password").fill(pw);
@@ -60,6 +61,10 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   await expect(page.getByText(/redrafting the whole season is turned off/)).toBeVisible();
   await expect(page.getByRole("button", { name: /Redraft unapproved nights/ })).toHaveCount(0);
   await expect(page.getByText(/^Christmas · /)).toBeVisible(); // Night 27 is in the review queue
+  // Dashboard agrees with the family view: Night 1 is tonight's card for the demo before Advent.
+  await page.getByRole("tab", { name: "Dashboard", exact: true }).click();
+  await expect(page.getByText(/Demo: families see Night 1 early/)).toBeVisible();
+  await expect(page.getByText("Demo data", { exact: true })).toHaveCount(1);
   const me = await (await page.request.get("/api/me")).json();
   const demo = me.churches.find((c: { code: string }) => c.code === "HOPE25");
   const r = await page.request.post(`/api/churches/${demo.id}/draft`, { data: {} });
@@ -77,5 +82,18 @@ test("demo church: whole-season redraft is refused and hidden; Night 27 reads Ch
   await expect(fam.getByText(/Night 27 · .* · Christmas\b/)).toBeVisible();
   await fam.getByRole("button", { name: "Cambiar a español" }).click();
   await expect(fam.getByText(/Noche 27 · .* · Navidad\b/)).toBeVisible();
+  await ctx.close();
+});
+
+test("a Spanish-language phone opens the family view in Spanish", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 360, height: 780 }, locale: "es-MX", extraHTTPHeaders: { "x-test-now": BEFORE_ADVENT } });
+  const page = await ctx.newPage();
+  await page.goto("/j/HOPE25");
+  await page.getByRole("button", { name: "Unirme" }).click();
+  await expect(page.getByText("Léanlo en voz alta juntos.")).toBeVisible();
+  // An explicit choice sticks.
+  await page.getByRole("button", { name: "Switch to English" }).click();
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Cambiar a español" })).toBeVisible();
   await ctx.close();
 });

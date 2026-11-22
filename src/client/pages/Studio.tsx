@@ -494,7 +494,10 @@ function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; toda
   const [copied, setCopied] = useState(false);
   useEffect(() => { api(`/api/churches/${ch.id}/dashboard`).then(setD).catch(() => {}); }, [ch.id]);
   if (!d) return <p className="muted" aria-busy="true">Loading…</p>;
-  const tonight = nights.find((n) => n.date === today);
+  // The server's dashboard date (the demo church opens Night 1 early, like the family view).
+  const day: string = d.today ?? today;
+  const demoEarly = !!d.is_demo && day !== today;
+  const tonight = nights.find((n) => n.date === day && n.status === "approved");
   const max = Math.max(5, ...d.nights.map((n: any) => n.lit.value ?? 0));
   const slide = () => {
     const c = document.createElement("canvas");
@@ -542,8 +545,9 @@ function DashboardTab({ ch, nights, today }: { ch: Church; nights: Night[]; toda
       </section>
       <section className="card">
         <h2>Tonight's card</h2>
+        {demoEarly && tonight && <p className="small muted">Demo: families see Night 1 early, before Advent begins on {fmtDate(ch.season_start, "en")}.</p>}
         {tonight ? <ProseView p={tonight} verse={tonight.verse_en} reference={tonight.reference} translation={TRANSLATIONS[ch.translation as "bsb"].short} />
-          : <p className="muted">No night is scheduled for today ({fmtDate(today, "en")}). The season runs {fmtDate(ch.season_start, "en")} to {fmtDate(ch.season_end, "en")}.</p>}
+          : <p className="muted">No approved night is scheduled for today ({fmtDate(day, "en")}). The season runs {fmtDate(ch.season_start, "en")} to {fmtDate(ch.season_end, "en")}.</p>}
       </section>
       <section className="card">
         <h2>AI activity log</h2>
