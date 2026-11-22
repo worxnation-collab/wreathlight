@@ -48,24 +48,28 @@ See [DATA-SOURCES.md](DATA-SOURCES.md). Scripture: Berean Standard Bible, King J
 npm install
 cp .dev.vars.example .dev.vars        # set SESSION_SECRET to a random string; AI_MOCK=1 uses a local mock drafter
 npm run db:migrate:local
+npm run seed:demo:local                # fictional demo church HOPE25 (idempotent)
 npm run dev                            # builds the client, then wrangler dev on http://127.0.0.1:8787
 npm test                               # vitest (validator, Starter Plan, draft pipeline)
-PW_CHANNEL=chrome npx playwright test  # e2e against the running wrangler dev
+npm run lint && npm run guard          # ESLint + the no-Verse-Arcade guard
+npx playwright test                    # e2e; starts wrangler dev itself (or set BASE_URL)
 ```
 
 `npm run import-bible` re-downloads the Bible texts and rebuilds `content/bible/*.json` and the quotation index `content/bible/shingles.bin`.
 
 ### Deploy (Cloudflare Workers free plan)
 
-1. `wrangler d1 create wreathlight` and put the id in `wrangler.toml`.
-2. `wrangler d1 migrations apply wreathlight --remote`
-3. `wrangler secret put SESSION_SECRET` and `wrangler secret put GEMINI_API_KEY` (free-tier key, no billing on the Google project).
-4. Set `GEMINI_MODEL` / `GEMINI_FALLBACK_MODEL` in `wrangler.toml` from ListModels.
-5. `npm run build && wrangler deploy`
+Every push to `main` runs CI (typecheck, lint, unit tests, guard, Playwright against `wrangler dev`) and then
+`.github/workflows/ci.yml` builds the client, applies D1 migrations (`wreathlight-db`) remotely and deploys to
+`https://wreathlight.worxnation.workers.dev` with the `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` repo secrets.
+Worker secrets (`SESSION_SECRET`, `GEMINI_API_KEY`) are set once with `wrangler secret put` and never stored in the repo.
+`GEMINI_MODEL` / `GEMINI_FALLBACK_MODEL` live in `wrangler.toml` (checked with ListModels).
 
 ## Demo church
 
 "Hope Creek Community Church (demo)" in Lakeside is fictional. Its data is synthetic and resets hourly. Code `HOPE25`.
+The hourly cron restores it from `demo_snapshot` (captured with `npm run seed:demo:remote -- --capture` after a real
+pipeline run), or from the Starter Plan until a snapshot exists. Households are anonymous synthetic hashes; no names.
 
 ## Structure
 

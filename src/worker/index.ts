@@ -12,6 +12,7 @@ import { SEASONS, TRADITIONS, TRANSLATIONS, seasonNights, todayIn, weekOf, ADVEN
 import { validateNight, numbersMatch, type ValidationResult } from "../shared/validator";
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
+import { resetDemo } from "./demo";
 import { APP_NAME } from "../shared/brand";
 
 useShingleData(shingles);
@@ -535,6 +536,7 @@ export default {
     const cutoff = new Date(Date.now() - 7 * 86400000).toISOString();
     await env.DB.prepare("UPDATE ai_runs SET prompt_text = NULL WHERE created_at < ? AND prompt_text IS NOT NULL").bind(cutoff).run();
     await env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(new Date(Date.now() - 2 * 86400000).toISOString()).run();
-    // Forge: hourly demo-church reset (scripts/seed-demo) hooks in here.
+    // Hourly demo-church reset to its seed (same statements as scripts/seed-demo.ts).
+    await resetDemo(env.DB);
   },
 };
