@@ -2,7 +2,9 @@
 
 A free web app that helps a church run a nightly family Advent practice: five minutes at the table, then the phone goes away.
 
-Live URL: https://wreathlight.worxnation.workers.dev · Video: _Add the YouTube, Vimeo, or Loom link here once the demo video is uploaded._
+Live URL: https://wreathlight.worxnation.workers.dev · [Demo video](https://youtu.be/DWdnhGOvvCk) (1:59)
+
+[![Wreathlight demo video](https://i.ytimg.com/vi/DWdnhGOvvCk/hqdefault.jpg)](https://youtu.be/DWdnhGOvvCk)
 
 ## Build window
 
