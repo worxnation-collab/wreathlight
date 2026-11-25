@@ -12,10 +12,71 @@ test("demo church: before Advent, Night 1 opens early so visitors can try it", a
   expect(d.nights.map((n: { night: number }) => n.night)).toEqual([1]);
 });
 
-test("home shows the three demo entry points", async ({ page }) => {
+test("home shows the Pastor Dana button and the three demo entry points", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Try the live demo" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Try the demo as Pastor Dana" })).toBeVisible();
   for (const name of [/Be a family/, /Be the pastor/, /Sunday projector/]) await expect(page.getByRole("link", { name })).toBeVisible();
+});
+
+test("one tap from home opens the HOPE25 Studio as Pastor Dana, with redraft locked", async ({ page, request }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Try the demo as Pastor Dana" }).click();
+  await expect(page.getByRole("tab", { name: "Nights" })).toBeVisible();
+  await expect(page.getByText("Pastor Dana (demo)")).toBeVisible();
+  await expect(page.getByText(/redrafting the whole season is turned off/)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Redraft unapproved nights/ })).toHaveCount(0);
+  const me = await (await page.request.get("/api/me")).json();
+  expect(me.demo).toBe(true);
+  expect(me.pastor.display_name).toBe("Pastor Dana (demo)");
+  expect(me.churches.every((c: { is_demo: boolean; code: string }) => c.is_demo && c.code === "HOPE25")).toBe(true);
+  expect(me.churches).toHaveLength(1);
+  const created = await page.request.post("/api/churches", { data: { name: "Should not exist", pastor_display_name: "No", season: "nov29", tradition: "hope", translation: "bsb", theme: "prophecy", sermons: [], spanish_on: false, keep_going_on: false, tz: "America/New_York" } });
+  expect(created.status()).toBe(403);
+  expect((await created.json()).error).toBe("demo_locked");
+  const draft = await page.request.post(`/api/churches/${me.churches[0].id}/draft`, { data: {} });
+  expect(draft.status()).toBe(403);
+  expect((await draft.json()).error).toBe("demo_locked");
+  // Health check: the endpoint never echoes a password.
+  const raw = await (await request.post("/api/auth/demo", { data: {} })).text();
+  expect(raw.toLowerCase()).not.toMatch(/password|pw_hash|secret/);
+});
+
+test("Studio sign-in shows the same one-tap demo button", async ({ page }) => {
+  await page.goto("/studio");
+  await expect(page.getByRole("heading", { name: "Sign in to the Studio" })).toBeVisible();
+  await page.getByRole("button", { name: "Try the demo as Pastor Dana" }).click();
+  await expect(page.getByRole("tab", { name: "Nights" })).toBeVisible();
+  await expect(page.getByText("Pastor Dana (demo)")).toBeVisible();
+});
+
+test("demo session cannot see or open a non-demo church, even if wrongly linked", async ({ request, browser }) => {
+  const email = `pastor-${Date.now()}@example.com`;
+  const signup = await request.post("/api/auth/signup", { data: { email, password: "a-real-pastor-passphrase", display_name: "Pastor Pat" } });
+  expect(signup.ok()).toBe(true);
+  const created = await request.post("/api/churches", { data: {
+    name: "Real Creek Church", pastor_display_name: "Pastor Pat", season: "nov29", tradition: "hope",
+    translation: "bsb", theme: "prophecy", sermons: [], spanish_on: false, keep_going_on: false, tz: "America/New_York",
+  } });
+  expect(created.ok()).toBe(true);
+  const real = await created.json();
+  expect(real.is_demo).toBeFalsy();
+
+  await request.post("/api/auth/demo", { data: {} });
+  const demoMe = await (await request.get("/api/me")).json();
+  execSync(`npx wrangler d1 execute wreathlight-db --local --command "INSERT OR IGNORE INTO church_admins (church_id, pastor_id, role) VALUES ('${real.id}', '${demoMe.pastor.id}', 'owner')"`, { stdio: "ignore" });
+
+  const ctx = await browser.newContext();
+  const p = await ctx.newPage();
+  await p.goto("/studio");
+  await p.getByRole("button", { name: "Try the demo as Pastor Dana" }).click();
+  await expect(p.getByRole("tab", { name: "Nights" })).toBeVisible();
+  const me = await (await p.request.get("/api/me")).json();
+  expect(me.demo).toBe(true);
+  expect(me.churches.map((c: { id: string }) => c.id)).not.toContain(real.id);
+  expect(me.churches.every((c: { is_demo: boolean }) => c.is_demo)).toBe(true);
+  expect((await p.request.get(`/api/churches/${real.id}`)).status()).toBe(404);
+  await ctx.close();
 });
 
 test("family on a phone before Advent lands on Night 1 of the demo", async ({ browser }) => {
@@ -46,17 +107,11 @@ test("Keep going card stays hidden before Christmas, even in demo preview", asyn
   expect(xmas.church.keep_going).not.toBeNull();
 });
 
-test("demo church: whole-season redraft is refused and hidden; Night 27 reads Christmas / Navidad", async ({ page, request, browser }) => {
-  // Creates the demo login locally, then re-runs the demo seed so it links that login to HOPE25 (same as the hourly reset).
-  const pw = "local e2e demo password";
-  const s = await request.post("/api/auth/signup", { data: { email: "demo@wreathlight.app", password: pw, display_name: "Pastor Dana (demo)" } });
-  test.skip(s.status() === 409, "demo login already exists in this local DB");
-  execSync("npx tsx scripts/seed-demo.ts --local", { stdio: "ignore" });
+test("demo church: whole-season redraft is refused and hidden; Night 27 reads Christmas / Navidad", async ({ page, browser }) => {
+  // One-tap demo login (creates the demo pastor if needed and links it to HOPE25).
   await page.setExtraHTTPHeaders({ "x-test-now": BEFORE_ADVENT });
   await page.goto("/studio");
-  await page.getByLabel("Email").fill("demo@wreathlight.app");
-  await page.getByLabel("Password").fill(pw);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByRole("button", { name: "Try the demo as Pastor Dana" }).click();
   await expect(page.getByRole("tab", { name: "Nights" })).toBeVisible();
   await expect(page.getByText(/redrafting the whole season is turned off/)).toBeVisible();
   await expect(page.getByRole("button", { name: /Redraft unapproved nights/ })).toHaveCount(0);

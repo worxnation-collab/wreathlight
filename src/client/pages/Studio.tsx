@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { api, ApiError } from "../api";
 import { Link, navigate, usePath } from "../router";
 import { APP_NAME } from "../../shared/brand";
+import { DemoPastorButton } from "../components/DemoPastorButton";
 import { Wordmark } from "../components/Wordmark";
 import { SEASONS, TRADITIONS, TRANSLATIONS, seasonLabel } from "../../shared/season";
 import { THEMES } from "../../shared/themes";
@@ -22,12 +23,13 @@ export default function Studio() {
   if (me === undefined) return <div className="studio" aria-busy="true" />;
   if (me === null) return <Shell><Auth onDone={refresh} /></Shell>;
   const m = path.match(/^\/studio\/c\/([a-f0-9-]{36})/);
-  const wantsNew = path === "/studio/new" || me.churches.length === 0;
+  const wantsNew = !me.demo && (path === "/studio/new" || me.churches.length === 0);
   const churchId = m?.[1] ?? me.churches[0]?.id;
   return (
     <Shell me={me} onLogout={async () => { await api("/api/auth/logout", { body: {} }); setMe(null); }}>
       {wantsNew ? <CreateChurch me={me} onCreated={(c) => { refresh(); navigate(`/studio/c/${c.id}`); }} />
-        : <ChurchStudio key={churchId} id={churchId} churches={me.churches} />}
+        : churchId ? <ChurchStudio key={churchId} id={churchId} churches={me.churches} />
+        : <p className="note" role="status">The demo Studio isn't ready yet. Please refresh, or return to the home page and try again.</p>}
     </Shell>
   );
 }
@@ -70,6 +72,13 @@ function Auth({ onDone }: { onDone: () => void }) {
     <div style={{ maxWidth: 440, margin: "32px auto" }}>
       <h1>{mode === "in" ? "Sign in to the Studio" : "Create your Studio account"}</h1>
       <p className="muted">For pastors and family ministry leaders. Families never need an account.</p>
+      {mode === "in" && (
+        <div className="card demo-card" style={{ marginBottom: 18 }}>
+          <h2 style={{ margin: 0 }}>Judging the live demo?</h2>
+          <p className="muted small" style={{ margin: 0 }}>One tap opens the shared HOPE25 Studio as Pastor Dana. Fictional data, resets hourly. No password needed.</p>
+          <DemoPastorButton onDone={onDone} />
+        </div>
+      )}
       <form className="card" onSubmit={submit}>
         {mode === "up" && (
           <div className="field">
@@ -85,7 +94,7 @@ function Auth({ onDone }: { onDone: () => void }) {
           <label htmlFor="pw">Password</label>
           <input id="pw" type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={mode === "up" ? 10 : 1} autoComplete={mode === "up" ? "new-password" : "current-password"} />
           {mode === "up" && <span className="hint">At least 10 characters.</span>}
-          {mode === "in" && <span className="hint">Forgot it? Contact your Wreathlight admin. Judging? Use the demo login from the submission.</span>}
+          {mode === "in" && <span className="hint">Forgot it? Contact your Wreathlight admin. Judging? Use the button above to open the demo.</span>}
         </div>
         {err && <p className="error" role="alert">{err}</p>}
         <button className="btn btn-primary" style={{ width: "100%" }} disabled={busy}>{mode === "in" ? "Sign in" : "Create account"}</button>

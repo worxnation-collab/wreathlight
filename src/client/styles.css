@@ -201,6 +201,8 @@ textarea.input { min-height: 72px; resize: vertical; }
 /* ---------- home: demo entry ---------- */
 .hero-sub { font-size: 0.98rem !important; color: #c9c1ac !important; margin-top: 18px !important; }
 .demo-card { display: grid; gap: 14px; }
+.demo-cta-wrap { display: grid; gap: 8px; }
+.demo-cta { width: 100%; min-height: 52px; font-size: 1.08rem; }
 .demo-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .demo-link { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fbf5e6; color: var(--text); text-decoration: none; transition: border-color 0.15s, transform 0.1s; }
 .demo-link:hover, .demo-link:focus-visible { border-color: var(--gold); transform: translateY(-1px); }

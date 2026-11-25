@@ -11,7 +11,9 @@
  */
 import { seasonNights, SEASONS, todayIn, addDays } from "../shared/season";
 import { validateNight } from "../shared/validator";
+import { hashPassword } from "./auth";
 import { starterFor } from "./draft";
+import { nowIso, uuid } from "./util";
 
 export const DEMO_CHURCH_ID = "demo-hope-creek";
 export const DEMO_CODE = "HOPE25";
@@ -205,4 +207,38 @@ export async function demoRedraftUnlocked(db: D1Database, now = new Date()): Pro
   } catch {
     return false;
   }
+}
+
+/** A demo-scoped session may only see churches flagged is_demo. */
+export function churchAllowedInDemoScope(isDemoChurch: boolean): boolean {
+  return !!isDemoChurch;
+}
+
+/** True when this pastor is the shared demo login (DEMO_EMAIL). */
+export async function pastorIsDemo(db: D1Database, pastorId: string): Promise<boolean> {
+  const row = await db.prepare("SELECT email FROM pastors WHERE id = ?").bind(pastorId).first<{ email: string }>();
+  return row?.email === DEMO_EMAIL;
+}
+
+/**
+ * Ensure the demo pastor exists and is linked as owner of the demo church.
+ * If the row is missing, create it with a random unguessable password that is never returned or logged.
+ * An existing password (set outside the repo for the judge login) is left untouched.
+ */
+export async function ensureDemoPastor(db: D1Database): Promise<string> {
+  const existing = await db.prepare("SELECT id FROM pastors WHERE email = ?").bind(DEMO_EMAIL).first<{ id: string }>();
+  let id = existing?.id;
+  if (!id) {
+    id = uuid();
+    const secret = crypto.getRandomValues(new Uint8Array(32));
+    let pw = "";
+    for (const b of secret) pw += b.toString(16).padStart(2, "0");
+    const { hash, salt } = await hashPassword(pw);
+    await db.prepare("INSERT INTO pastors (id, email, pw_hash, pw_salt, display_name, created_at) VALUES (?, ?, ?, ?, ?, ?)")
+      .bind(id, DEMO_EMAIL, hash, salt, DEMO_PASTOR, nowIso()).run();
+  }
+  await db.prepare(
+    "INSERT OR IGNORE INTO church_admins (church_id, pastor_id, role) SELECT ?, ?, 'owner' FROM churches WHERE id = ? AND is_demo = 1",
+  ).bind(DEMO_CHURCH_ID, id, DEMO_CHURCH_ID).run();
+  return id;
 }
