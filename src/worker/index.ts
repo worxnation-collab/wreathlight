@@ -1,7 +1,7 @@
 import { Hono, type Context } from "hono";
 import { z } from "zod";
 import type { Env } from "./env";
-import { endSession, hashPassword, ipHash, rateLimit, sessionPastorId, startSession, verifyPassword } from "./auth";
+import { endSession, hashPassword, ipHash, rateLimit, sessionInfo, startSession, verifyPassword } from "./auth";
 import { churchCode, nowIso, sameNightContent, sha256Hex, stableJson, uuid } from "./util";
 import { geminiClient, mockClient, type AiClient } from "./ai";
 import { draftWeek, starterFor } from "./draft";
@@ -12,14 +12,14 @@ import { SEASONS, TRADITIONS, TRANSLATIONS, seasonNights, todayIn, weekOf, ADVEN
 import { validateNight, numbersMatch, type ValidationResult } from "../shared/validator";
 import { useShingleData } from "../shared/scripture";
 import shingles from "../../content/bible/shingles.bin";
-import { resetDemo, demoResetPaused, demoRedraftUnlocked } from "./demo";
+import { resetDemo, demoResetPaused, demoRedraftUnlocked, DEMO_CHURCH_ID, DEMO_CODE, DEMO_PASTOR, ensureDemoPastor, pastorIsDemo } from "./demo";
 import { isAppRoute } from "../shared/routes";
 import { APP_NAME } from "../shared/brand";
 
 useShingleData(shingles);
 
-type C = Context<{ Bindings: Env; Variables: { pastorId: string } }>;
-const app = new Hono<{ Bindings: Env; Variables: { pastorId: string } }>();
+type C = Context<{ Bindings: Env; Variables: { pastorId: string; demoSession: boolean } }>;
+const app = new Hono<{ Bindings: Env; Variables: { pastorId: string; demoSession: boolean } }>();
 
 // ---------- helpers ----------
 const THRESHOLD = 5;
@@ -131,15 +131,24 @@ async function writeNight(db: D1Database, churchId: string, n: { night: number; 
 
 // ---------- auth middleware ----------
 const requirePastor = async (c: C, next: () => Promise<void>) => {
-  const pid = await sessionPastorId(c);
-  if (!pid) return c.json({ error: "signed_out" }, 401);
-  c.set("pastorId", pid);
+  const s = await sessionInfo(c);
+  if (!s) return c.json({ error: "signed_out" }, 401);
+  c.set("pastorId", s.pastorId);
+  c.set("demoSession", s.demo);
   await next();
 };
+/** Demo-scoped if the one-tap demo session flag is set, or the pastor is the shared demo login. */
+async function demoScoped(c: C): Promise<boolean> {
+  if (c.get("demoSession")) return true;
+  return pastorIsDemo(c.env.DB, c.get("pastorId"));
+}
 async function ownedChurch(c: C, id: string): Promise<ChurchRow | null> {
-  return c.env.DB.prepare(
+  const ch = await c.env.DB.prepare(
     "SELECT ch.* FROM churches ch JOIN church_admins a ON a.church_id = ch.id WHERE ch.id = ? AND a.pastor_id = ?",
   ).bind(id, c.get("pastorId")).first<ChurchRow>();
+  if (!ch) return null;
+  if (await demoScoped(c) && !ch.is_demo) return null;
+  return ch;
 }
 async function ownedNight(c: C, id: string): Promise<{ n: NightRow; ch: ChurchRow } | null> {
   const n = await c.env.DB.prepare("SELECT * FROM nights WHERE id = ?").bind(id).first<NightRow>();
@@ -174,21 +183,40 @@ app.post("/api/auth/login", async (c) => {
   return c.json({ id: p.id, email: b.email, display_name: p.display_name });
 });
 app.post("/api/auth/logout", (c) => { endSession(c); return c.json({ ok: true }); });
+// One-tap demo Studio login for judges: starts a session as Pastor Dana on HOPE25 only.
+// Reuses the same httpOnly session cookie as a normal login. Never accepts or returns a password.
+app.post("/api/auth/demo", async (c) => {
+  if (!(await rateLimit(c.env.DB, `demo:${await ipHash(c)}`, 20, 15 * 60000))) {
+    return c.json({ error: "too_many_tries", message: "Too many tries. Wait 15 minutes and try again." }, 429);
+  }
+  const church = await c.env.DB.prepare("SELECT id FROM churches WHERE id = ? AND is_demo = 1").bind(DEMO_CHURCH_ID).first();
+  if (!church) await resetDemo(c.env.DB, now(c));
+  const ready = await c.env.DB.prepare("SELECT id FROM churches WHERE id = ? AND is_demo = 1").bind(DEMO_CHURCH_ID).first();
+  if (!ready) return c.json({ error: "demo_unavailable", message: "The demo church isn't available right now. Please try again shortly." }, 503);
+  const id = await ensureDemoPastor(c.env.DB);
+  await startSession(c, id, { demo: true });
+  return c.json({ ok: true, display_name: DEMO_PASTOR, church_code: DEMO_CODE });
+});
 // Signed-out is a normal state for the Studio, so it answers 200 with null instead of a 401 (no console errors).
 app.get("/api/me", async (c) => {
-  const pid = await sessionPastorId(c);
-  if (!pid) return c.json(null);
-  c.set("pastorId", pid);
+  const s = await sessionInfo(c);
+  if (!s) return c.json(null);
+  c.set("pastorId", s.pastorId);
+  c.set("demoSession", s.demo);
   const p = await c.env.DB.prepare("SELECT id, email, display_name FROM pastors WHERE id = ?").bind(c.get("pastorId")).first();
   if (!p) return c.json(null);
+  const scoped = await demoScoped(c);
   const { results } = await c.env.DB.prepare(
-    "SELECT ch.* FROM churches ch JOIN church_admins a ON a.church_id = ch.id WHERE a.pastor_id = ? ORDER BY ch.created_at",
+    scoped
+      ? "SELECT ch.* FROM churches ch JOIN church_admins a ON a.church_id = ch.id WHERE a.pastor_id = ? AND ch.is_demo = 1 ORDER BY ch.created_at"
+      : "SELECT ch.* FROM churches ch JOIN church_admins a ON a.church_id = ch.id WHERE a.pastor_id = ? ORDER BY ch.created_at",
   ).bind(c.get("pastorId")).all<ChurchRow>();
-  return c.json({ pastor: p, churches: results.map(churchOut), ai_server_enabled: c.env.AI_ENABLED !== "false" });
+  return c.json({ pastor: p, churches: results.map(churchOut), ai_server_enabled: c.env.AI_ENABLED !== "false", demo: scoped });
 });
 
 // ---------- churches ----------
 app.post("/api/churches", requirePastor, async (c) => {
+  if (await demoScoped(c)) return c.json({ error: "demo_locked", message: "The demo login can't create a church. It only opens the shared HOPE25 Studio." }, 403);
   const b = await body(c, ChurchCreate);
   if (isResp(b)) return b;
   const id = uuid();
