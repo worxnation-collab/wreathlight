@@ -79,6 +79,10 @@ Worker secrets (`SESSION_SECRET`, `GEMINI_API_KEY`) are set once with `wrangler 
 The hourly cron restores it from `demo_snapshot` (captured with `npm run seed:demo:remote -- --capture` after a real
 pipeline run), or from the Starter Plan until a snapshot exists. Households are anonymous synthetic hashes; no names.
 
+Judges can open the Studio with the "Try the demo as Pastor Dana" button on the home page or the Studio sign-in
+screen. That starts a session as the demo pastor on HOPE25 only; it cannot create a church or open a non-demo church.
+Password login for real pastor accounts is unchanged.
+
 On the demo church, "Redraft unapproved nights" is off (the API answers 403 `demo_locked`) so visitors can't spend the
 shared Gemini quota; single-night "Regenerate" still works within the per-church daily cap.
 

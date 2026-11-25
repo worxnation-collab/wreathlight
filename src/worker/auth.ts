@@ -37,8 +37,10 @@ function secret(env: Env): string {
   if (!env.SESSION_SECRET || env.SESSION_SECRET.length < 16) throw new Error("SESSION_SECRET is not configured");
   return env.SESSION_SECRET;
 }
-export async function startSession(c: Context<{ Bindings: Env; Variables: any }>, pastorId: string) {
-  const payload = b64url(new TextEncoder().encode(JSON.stringify({ pid: pastorId, exp: Date.now() + SESSION_DAYS * 86400000 })));
+export async function startSession(c: Context<{ Bindings: Env; Variables: any }>, pastorId: string, opts?: { demo?: boolean }) {
+  const payload = b64url(new TextEncoder().encode(JSON.stringify({
+    pid: pastorId, exp: Date.now() + SESSION_DAYS * 86400000, ...(opts?.demo ? { demo: true } : {}),
+  })));
   const sig = await hmac(secret(c.env), payload);
   const secure = new URL(c.req.url).protocol === "https:";
   setCookie(c, SESSION_COOKIE, `${payload}.${sig}`, {
@@ -48,7 +50,7 @@ export async function startSession(c: Context<{ Bindings: Env; Variables: any }>
 export function endSession(c: Context<{ Bindings: Env; Variables: any }>) {
   deleteCookie(c, SESSION_COOKIE, { path: "/" });
 }
-export async function sessionPastorId(c: Context<{ Bindings: Env; Variables: any }>): Promise<string | null> {
+export async function sessionInfo(c: Context<{ Bindings: Env; Variables: any }>): Promise<{ pastorId: string; demo: boolean } | null> {
   const raw = getCookie(c, SESSION_COOKIE);
   if (!raw) return null;
   const [payload, sig] = raw.split(".");
@@ -58,10 +60,13 @@ export async function sessionPastorId(c: Context<{ Bindings: Env; Variables: any
   try {
     const p = JSON.parse(new TextDecoder().decode(fromB64url(payload)));
     if (typeof p.pid !== "string" || p.exp < Date.now()) return null;
-    return p.pid;
+    return { pastorId: p.pid, demo: p.demo === true };
   } catch {
     return null;
   }
+}
+export async function sessionPastorId(c: Context<{ Bindings: Env; Variables: any }>): Promise<string | null> {
+  return (await sessionInfo(c))?.pastorId ?? null;
 }
 
 /** Daily-salted IP hash: SHA-256(ip + DAILY_SALT), DAILY_SALT derived from SESSION_SECRET + date. Raw IPs are never stored. */

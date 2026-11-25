@@ -2,6 +2,7 @@ import { useState } from "react";
 import { APP_NAME, TAGLINE } from "../../shared/brand";
 import { Wreath } from "../components/Wreath";
 import { Wordmark } from "../components/Wordmark";
+import { DemoPastorButton } from "../components/DemoPastorButton";
 import { Link, navigate } from "../router";
 
 export function Home() {
@@ -27,6 +28,8 @@ export function Home() {
             <h2 id="demo-h" style={{ margin: 0 }}>Try the live demo</h2>
             <span className="pill demo">Fictional demo church · resets hourly</span>
           </div>
+          <DemoPastorButton />
+          <p className="muted small" style={{ margin: 0 }}>Opens the shared HOPE25 Studio as Pastor Dana. Fictional data, resets hourly. Whole-season redraft stays locked.</p>
           <div className="demo-links">
             <Link to="/j/HOPE25" className="demo-link">
               <strong>1. Be a family</strong>
@@ -34,14 +37,14 @@ export function Home() {
             </Link>
             <Link to="/studio" className="demo-link">
               <strong>2. Be the pastor</strong>
-              <span>See AI drafts, the checks on every line, and approve each night yourself.</span>
+              <span>Or sign in to the Studio. The button above skips the login for the live demo.</span>
             </Link>
             <Link to="/c/HOPE25/wreath" className="demo-link">
               <strong>3. Sunday projector</strong>
               <span>The whole church's light this week. Counts only, never names.</span>
             </Link>
           </div>
-          <p className="muted small" style={{ margin: 0 }}>Church code <strong>HOPE25</strong>. Judges: the Studio demo login is in the submission.</p>
+          <p className="muted small" style={{ margin: 0 }}>Church code <strong>HOPE25</strong>.</p>
         </div>
         <div className="grid2">
           <div className="card">
